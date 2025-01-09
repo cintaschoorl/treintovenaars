@@ -41,16 +41,36 @@ class Trajectory():
         Nog automatizeren!!!
         """
         for c in self.connection_list:
-            if c.station1 == station1 and c.station2 == station2: #and (total_time + c.travel_time) < 120:
-                if self.traject == []:
-                    print(c.station1)
-                    self.traject.append(c.station1)
-                    self.traject.append(c.station2)
+            # search right connection
+            if c.station1 == station1 and c.station2 == station2:
+                # check if within timeframe
+                if (self.duration + c.travel_time) < self.max_duration:     
+                    # add both 1 and 2 if list is empty     
+                    if self.traject == []:
+
+                        self.traject.append(c.station1)
+                        self.traject.append(c.station2)
+                    else:
+                        # add only the second
+                        self.traject.append(c.station2)
+
+                    self.duration += c.travel_time
+                    print(f"Connection {station1} - {station2} added:")
+                    print(f"Total trajectory time is: {self.duration} minutes")
+
                 else:
-                    self.traject.append(c.station2)
-                self.duration += c.travel_time
-                print(f"Connection {station1} - {station2} added:")
-                print(f"Total trajectory time is: {self.duration} minutes")
+                    print("TOO LONG")
+
+class Lines():
+    def __init__(self, trajectories: dict):
+        self.trajectories = trajectories
+
+    def fraction_p(self):
+        "Compute fraction p of used connections"
+        pass
+            
+    
+
 
 
 
@@ -89,14 +109,15 @@ if __name__ == "__main__":
     #         print(c.station1, c.station2)
     # connection_list = [(c.station1, c.station2, c.travel_time) for c in connections]
 
-    train1 = Trajectory(connections, 120)
-    train1.add_connection('Alkmaar', 'Hoorn')
-    print(train1.traject)
-    train1.add_connection('Hoorn', 'Zaandam')
-    print(train1.traject)
+    train_1 = Trajectory(connections, 55)
+    train_1.add_connection('Alkmaar', 'Hoorn')
+    print(train_1.traject)
+    train_1.add_connection('Hoorn', 'Zaandam')
+    print(train_1.traject)
 
-    
-    # for c in connections[:5]:
-    #     train1.add_connection(c.station1, c.station2)
+    # create dictionary with each trajectory and its duration
+    trajectories = {}
+    trajectories['train_1'] = train_1.traject, train_1.duration
 
-    # print(connections)
+    print(trajectories)
+    print(len(trajectories))
