@@ -55,8 +55,7 @@ class Trajectory():
                         self.traject.append(c.station2)
 
                     self.duration += c.travel_time
-                    print(f"Connection {station1} - {station2} added:")
-                    print(f"Total trajectory time is: {self.duration} minutes")
+                    print(f"Connection {station1} - {station2} added: total duration is {self.duration} min.")
 
                 else:
                     print("TOO LONG")
@@ -67,11 +66,18 @@ class Lines():
 
     def fraction_p(self):
         "Compute fraction p of used connections"
-        pass
-            
-    
+        self.p = 0.8 # nog even computen enzo
 
+    def quality_K(self):
+        T = len(self.trajectories)
+        Min = 0
 
+        for values in self.trajectories.values():
+            Min += values[1]
+        
+        # compute quality of the lines K
+        return (self.p * 10000 - (T * 100 + Min))
+       
 
 
 def load_stations(filepath):
@@ -95,6 +101,7 @@ def load_connections(filepath):
             connections.append(Connection(station2, station1, int(travel_time)))
     return connections
 
+
 if __name__ == "__main__":
     # Inputbestanden
     stations_file = "StationsHolland.csv"
@@ -103,21 +110,16 @@ if __name__ == "__main__":
     stations = load_stations(stations_file)
 
     connections = load_connections(connections_file)
-    # print(connections)
-
-    # for c in connections[:5]:
-    #         print(c.station1, c.station2)
-    # connection_list = [(c.station1, c.station2, c.travel_time) for c in connections]
 
     train_1 = Trajectory(connections, 55)
     train_1.add_connection('Alkmaar', 'Hoorn')
-    print(train_1.traject)
     train_1.add_connection('Hoorn', 'Zaandam')
-    print(train_1.traject)
-
+    
     # create dictionary with each trajectory and its duration
     trajectories = {}
-    trajectories['train_1'] = train_1.traject, train_1.duration
+    trajectories['train_1'] = (train_1.traject, train_1.duration)
 
-    print(trajectories)
-    print(len(trajectories))
+    lijntjes = Lines(trajectories)
+    lijntjes.fraction_p()
+    K = lijntjes.quality_K()
+    print(f"The quality of the lines K = {K}")
