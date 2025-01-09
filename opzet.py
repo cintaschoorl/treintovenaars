@@ -19,6 +19,9 @@ class Trajectory():
         self.max_duration = max_duration
         self.connections = []
 
+# hoihoihoihoihoi test test
+print('hi')
+
     
 
 
