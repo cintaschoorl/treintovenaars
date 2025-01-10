@@ -39,6 +39,7 @@ def load_connections(filepath):
 
 if __name__ == "__main__":
     # Input
+    # deze bestanden meoten in dezelfde map staan, dus moeten even kijken hhoe we die kunnen aanroepen uit een andere map
     stations_file = "StationsHolland.csv"
     connections_file = "ConnectiesHolland.csv"
 
