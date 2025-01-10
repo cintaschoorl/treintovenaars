@@ -79,7 +79,6 @@ class Lines():
         
         # compute quality of the lines K
         return (self.p * 10000 - (T * 100 + Min))
-       
 
 
 def load_stations(filepath):
