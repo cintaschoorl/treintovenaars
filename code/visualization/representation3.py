@@ -19,7 +19,7 @@ def load_stations(filepath):
     stations = []
     with open(filepath, 'r') as file:
         reader = csv.reader(file)
-        next(reader)  # Skip header
+        next(reader)
         for row in reader:
             name, y, x = row
             stations.append(Station(name, float(y), float(x)))
