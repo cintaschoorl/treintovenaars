@@ -106,8 +106,8 @@ def load_connections(filepath):
 
 if __name__ == "__main__":
     # Inputbestanden
-    stations_file = "StationsHolland.csv"
-    connections_file = "ConnectiesHolland.csv"
+    stations_file = "data/StationsHolland.csv"
+    connections_file = "data/ConnectiesHolland.csv"
 
     stations = load_stations(stations_file)
 
