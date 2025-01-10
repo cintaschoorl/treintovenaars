@@ -1,6 +1,6 @@
 import csv
 
-# all classes are seperated in code/classes, this is our working code in full, but this will ofcourse be adjusted to from from different folders!
+# all classes are seperated in code/classes, this is our working code in full, but this will ofcourse be adjusted to work from different folders!
 
 class Station():
     """
