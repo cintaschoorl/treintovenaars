@@ -1,1 +1,9 @@
+# notities gesprek 1:
+state space goed uitleggen met alle aannames en versimpelingen:
+
+bovengrens kan 'zo realisitsch mogelijk' gemaakt worden
+- goede beredenatie belangrijk
+N = 28, je wil alle verbindingen berijden (ipv de 22 stations)
+N = 4 is een goed en reeel gekozen N, voor heel nederland wordt natuurlijk groter (bv utrecht)
+x7 verder prima, zolang en doordat alle 7 trajecten bereden worden!
 
