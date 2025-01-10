@@ -90,7 +90,7 @@ def load_stations(filepath):
             stations.append(Station(name, float(y), float(x)))
     return stations
 
-def load_connections(filepath):
+def load_connections(filepath): 
     connections = []
     with open(filepath, 'r') as file:
         reader = csv.reader(file)
