@@ -28,11 +28,10 @@ class Station():
         self.y = y
         self.x = x
         self.id = uid
-        self.neighbours = {}
 
-    def add_neighbours(self, station):
-        "Add neigbouring stations to make connection"
-        self.neighbours[station.id] = station
+    # def add_neighbours(self, station):
+    #     "Add neigbouring stations to make connection"
+    #     self.neighbours[station.id] = station
 
     def __repr__(self):
         "Represent object with its ID in a list/dict"
