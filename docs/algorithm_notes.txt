@@ -1,0 +1,13 @@
+# random
+...
+
+# hill climber:
+- random start state, iteratief kleine aanpassingen, als state verbeterd dan houden, anders weer terug
+
+pseudocode:
+Kies random start state
+herhaal tot na N-keer niet meer verbetert:
+  doe kleine random aanpassing
+  ...
+
+# constraint relaxation
