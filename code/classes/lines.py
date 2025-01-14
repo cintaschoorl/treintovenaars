@@ -1,6 +1,9 @@
 class Lines():
-    def __init__(self, trajectories: dict):
-        self.trajectories = trajectories
+    def __init__(self):
+        self.trajectories = {}
+
+    def add_trajectory(self, train):
+        self.trajectories[train.id] = train
 
     def fraction_p(self):
         "Compute fraction p of used connections"

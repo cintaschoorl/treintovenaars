@@ -113,14 +113,15 @@ if __name__ == "__main__":
     connections = load_connections(connections_file)
 
     train_1 = Trajectory(connections, 55)
+    train_1.add_name('alk_zaa')
     train_1.add_connection('Alkmaar', 'Hoorn')
     train_1.add_connection('Hoorn', 'Zaandam')
     
     # create dictionary with each trajectory and its duration
-    trajectories = {}
-    trajectories['train_1'] = (train_1.traject, train_1.duration)
+    # trajectories = {}
+    # trajectories['train_1'] = (train_1.traject, train_1.duration)
 
-    lijntjes = Lines(trajectories)
-    lijntjes.fraction_p()
-    K = lijntjes.quality_K()
-    print(f"The quality of the lines K = {K}")
+    # lijntjes = Lines(trajectories)
+    # lijntjes.fraction_p()
+    # K = lijntjes.quality_K()
+    # print(f"The quality of the lines K = {K}")

@@ -7,6 +7,10 @@ class Trajectory():
         self.duration = 0
         self.traject = []
 
+
+    def add_name(self, train_name):
+        self.id = train_name
+
     def add_connection(self, station1, station2):
         """
         Voegt connecties aan traject toe.
