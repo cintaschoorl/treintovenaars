@@ -1,19 +1,3 @@
-# oude versie: 
-class Station():
-    """
-    Represents a train station with a name and coordinates.
-    Attributes are: name and y- and x-coordinate.
-    """
-    def __init__(self,  name, y, x):
-        self.name = name
-        self.y = y
-        self.x = x
-
-
-# nieuwe versie:
-# radio russia voorbeeld als Node class, nog niet overeen met 
-# connection class, misschien is deze dus overbodig later door 
-# de add_neighbour method
 
 class Station():
     def __init__(self, name, y, x, uid):
@@ -28,10 +12,6 @@ class Station():
         self.y = y
         self.x = x
         self.id = uid
-
-    # def add_neighbours(self, station):
-    #     "Add neigbouring stations to make connection"
-    #     self.neighbours[station.id] = station
 
     def __repr__(self):
         "Represent object with its ID in a list/dict"

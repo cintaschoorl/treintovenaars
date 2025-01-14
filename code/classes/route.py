@@ -1,3 +1,4 @@
+
 class Route():
     "Create a train trajectory within a given timeframe"
     def __init__(self, connection_list, max_duration: int):
