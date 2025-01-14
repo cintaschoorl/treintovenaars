@@ -2,7 +2,7 @@ import csv
 from code.classes.station import Station
 from code.classes.connection import Connection
 from code.classes.trajectory import Trajectory
-from code.classes.routemap import Routemap
+from code.classes.railmap import Railmap
 
 
 def load_stations(filepath):

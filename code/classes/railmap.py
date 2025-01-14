@@ -1,4 +1,4 @@
-class Routemap():
+class Railmap():
     """
     The full route system with all trajectories
     """
@@ -13,7 +13,7 @@ class Routemap():
         self.p = 0.8 # example value -> needs to be computed!
 
     def quality_K(self):
-        T = len(self.trajectories)
+        T = len(self.trajectories) 
         Min = 0
 
         for values in self.trajectories.values():
