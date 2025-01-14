@@ -1,5 +1,5 @@
 # oude versie: 
-class Station_a():
+class Station():
     """
     Represents a train station with a name and coordinates.
     Attributes are: name and y- and x-coordinate.
