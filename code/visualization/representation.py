@@ -1,6 +1,7 @@
 import csv
 import networkx as nx
 import matplotlib.pyplot as plt
+import os
 
 class Station:
     def __init__(self, name, y, x):
@@ -38,13 +39,14 @@ def load_connections(filepath):
 
 
 if __name__ == "__main__":
-    # Input
-    # deze bestanden meoten in dezelfde map staan, dus moeten even kijken hhoe we die kunnen aanroepen uit een andere map
-    stations_file = "StationsHolland.csv"
-    connections_file = "ConnectiesHolland.csv"
-
-    stations = load_stations(stations_file)
-    connections = load_connections(connections_file)
+    # dynamic input paths
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    stations_path = os.path.join(script_dir, "../../data/StationsHolland.csv")
+    connections_path = os.path.join(script_dir, "../../data/ConnectiesHolland.csv")
+    
+    # load the data from the paths
+    stations = load_stations(stations_path)
+    connections = load_connections(connections_path)
 
     # Directed graph maken
     G = nx.DiGraph()
