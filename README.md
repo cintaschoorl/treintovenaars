@@ -1,7 +1,7 @@
 # treintovenaars
 Groepsproject Algoritmen &amp; Heuristieken
 - Cinta Schoorl
-- Isa Wagemands
+- Isa Wagemans
 - Emma van Tuinen
 
 # Structuur:
