@@ -2,12 +2,12 @@ import random
 
 class Route():
     "Create a train trajectory within a given timeframe"
-    def __init__(self, neighbours, max_duration: int):
+    def __init__(self, stations: dict, max_duration: int):
         """
         Neighbours is een dict die per station de omliggende buren
         en reistijd bevat.
         """
-        self.neighbours = neighbours
+        self.stations = stations
         self.max_duration = max_duration
         self.traject = []
 
@@ -16,7 +16,7 @@ class Route():
         Genereert random route vanaf een specifiek startstation als een lijst met IUDs.
         start_station: IUD van het startstation
         """
-        if start_station not in self.neighbours:
+        if start_station not in self.stations:
             raise ValueError(f"Start station {start_station} not found in neighbours.")
 
         current_station = start_station
@@ -27,7 +27,7 @@ class Route():
 
         while self.duration < self.max_duration:
             # zo krijg je de buren van het huidige station
-            neighbour_station = self.neighbours[current_station]
+            neighbour_station = self.stations[current_station]
 
             unvisited = {}
 

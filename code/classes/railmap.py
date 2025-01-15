@@ -9,7 +9,7 @@ class Railmap():
     def __init__(self, ):
         self.trajectories = {}
 
-    def load_all_files(self, station_path, uid_path, connections_path):
+    def load_stations(self, station_path, uid_path, connections_path):
         """
         Reads station, connections and uid file paths, and creates:
             - stations: dict of stations, with a dict per station with 
@@ -47,7 +47,6 @@ class Railmap():
                     station1.add_neighbour(station2, int(travel_time))
                     station2.add_neighbour(station1, int(travel_time))
         
-
 
     def add_trajectory(self, train):
         """"Route aanroepen"""
