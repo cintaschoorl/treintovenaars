@@ -52,16 +52,7 @@ class Route():
 
         return self.traject
 
-neighbours = {
-    "ASC": {"ASL": 5, "UTC": 30},
-    "ASL": {"ASC": 5, "DHC": 20},
-    "UTC": {"ASC": 30, "DHC": 35},
-    "DHC": {"ASL": 20, "UTC": 35},
-}
-route = Route(neighbours, max_duration=120)
-random_route = route.random_route(start_station="ASC")
-print("Generated Route:", random_route)
-print("Total Duration:", route.duration)
+
 
 
 
