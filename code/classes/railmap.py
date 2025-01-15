@@ -11,11 +11,11 @@ class Railmap():
 
     def load_all_files(self, station_path, uid_path, connections_path):
         """
-        Reads station and uid file paths, and creates:
-            1. a list of (22) Station instances for intercity stations
-            2. a list of the (56) possible Connection instances and traveltimes
+        Reads station, connections and uid file paths, and creates:
+            - stations: dict of stations, with a dict per station with 
+              neighbouring connections and their travel time
         """
-        # 1
+        # load uid's into dictionary
         uids = {}
         with open(uid_path, 'r') as uid_f:
             uid_reader = csv.reader(uid_f)
@@ -23,27 +23,31 @@ class Railmap():
             for row in uid_reader:
                 name, uid = row
                 uids[name] = uid
-        stations = []
-
+        
+        # load the stations with coordinates and uid's
+        self.stations = {}
         with open(station_path, 'r') as station_f:
             station_reader = csv.reader(station_f)
             next(station_reader)
             for row in station_reader:
                 name, y, x = row
                 uid = uids.get(name)
-                stations.append(Station(name, float(y), float(x), uid))
-        self.stations = stations
+                self.stations[name] = (Station(name, float(y), float(x), uid))
 
-        # 2
-        connections = []
+        # load connections and add neighbours
         with open(connections_path, 'r') as connect_f:
             connect_reader = csv.reader(connect_f)
             next(connect_reader)
+
             for row in connect_reader:
-                station1, station2, travel_time = row
-                connections.append(Connection(station1, station2, int(travel_time)))
-                connections.append(Connection(station2, station1, int(travel_time)))
-        self.connections = connections
+                station1_name, station2_name, travel_time = row
+                station1 = self.stations.get(station1_name)
+                station2 = self.stations.get(station2_name)
+                if station1 and station2:
+                    station1.add_neighbour(station2, int(travel_time))
+                    station2.add_neighbour(station1, int(travel_time))
+        
+
 
     def add_trajectory(self, train):
         """"Route aanroepen"""

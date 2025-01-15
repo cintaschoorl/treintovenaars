@@ -6,12 +6,23 @@ class Station():
         Attributes are: 
         - name
         - y- and x-coordinates
-        - id: unique ID
+        - id: unique 3-letter ID
+        - neighbours: dictionary containing neighbouring stations and their travel times
         """
         self.name = name
         self.y = y
         self.x = x
         self.id = uid
+        self.neighbours = {}
+
+    def add_neighbour(self, neighbour, travel_time):
+        # check for presence
+        if neighbour in self.neighbours:
+            print(f"{neighbour} already present.")
+            return
+        # otherwise add to dict
+        self.neighbours[neighbour] = travel_time
+
 
     def __repr__(self):
         "Represent object with its ID in a list/dict"
