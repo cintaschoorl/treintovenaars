@@ -1,9 +1,61 @@
-# notities gesprek 1:
-state space goed uitleggen met alle aannames en versimpelingen:
+Voor de versimpelde state space hebben wij als eerste gekeken naar welke
+formule we gaan gebruiken. Aangezien het in onze case zo is dat het mogelijk is
+om herhaaldelijk dezelfde keuze te maken (over iedere route zou je vaker heen kunnen rijden) en het
+in onze case de volgorde van de uitkomst belangrijk is, kwamen wij uit op de formule
+linksboven: N ^ r. De waarden die in deze formule ingevuld worden verschillen per opdracht 1
+en opdracht 2.
 
-bovengrens kan 'zo realisitsch mogelijk' gemaakt worden
-- goede beredenatie belangrijk
-N = 28, je wil alle verbindingen berijden (ipv de 22 stations)
-N = 4 is een goed en reeel gekozen N, voor heel nederland wordt natuurlijk groter (bv utrecht)
-x7 verder prima, zolang en doordat alle 7 trajecten bereden worden!
+Voor opdracht 1:
+N = 4, aangezien Amsterdam Sloterdijk, als station met het hoogst aantal omliggende stations,
+4 omliggende stations betreft. Dit aantal gaat over het maximale aantal opties die je hebt
+vanuit een bepaald station.
+r = 28, aangezien er 28 mogelijke keuzes maximaal te maken zijn, mocht je alle trajecten afgaan.
+Hiermee neem je dus nog niet de tijdsduur in acht; je zou in de praktijk namelijk niet alle stations
+af kunnen gaan binnen een beperkt aantal minuten.
 
+Wanneer je de formule met deze gegevens invult, wordt de State Space berekend als:
+4 ^ 28. Deze uitkomst vermenigvuldig je vervolgens met 7, aangezien je deze state
+space voor maximaal 7 trajecten zou kunnen benutten. De uiteindelijke State Space wordt dus:
+7 * (4 ^ 28).
+
+Voor opdracht 2:
+N = 9, aangezien Utrecht Centraal 9 omliggende stations betreft.
+r = 89, aangezien er nu sprake is van 89 trajecten tussen de stations in die je zou
+kunnen berijden, en dus keuzes die je maximaal zou kunnen maken.
+
+Wanneer je de formule met deze gegevens invult, wordt de State Space berekend als:
+9 ^ 89. Deze uitkomst vermenigvuldig je vervolgens met 20, aangezien je deze State Space
+voor maximaal 20 trajecten zou kunnen benutten. De uiteindelijke State Space voor heel Nederland
+wordt dus: 20 * (9 ^ 89).
+
+Belangrijk om te vermelden zijn hierbij de factoren die we niet in de berekening hebben meegenomen.
+In onze case is er namelijk sprake van een tijdslimiet voor ieder traject waar we overheen gaan rijden.
+Binnen dit tijdslimiet zou je niet onmogelijk vaak over alle trajecten heen kunnen rijden, aangezien dit
+niet binnen deze tijd zou kunnen en omdat je ook niet onnodig vaak over de trajecten heen hoeft te rijden.
+Dit tijdslimiet hebben wij niet in onze berekening meegenomen, omdat je voor de State Space de maximale som
+aan mogelijkheden wil berekenen, die dus de maximale grens aangeeft van de mogelijke staten die er bestaan.
+Tijd is hierin een beperkende factor die de State Space zal verkleinen. Omdat we nu ervan uit willen gaan
+dat de state space in ieder geval zo groot mogelijk is in het uiterste geval, hebben wij de factor tijd niet
+meegenomen in deze berekening.
+
+
+Zou je deze factor nu wel meenemen in de berekening van de state space, dan zou deze een stuk verkleinen.
+Aangezien je een State Space wil berekenen voor de grootst mogelijke waarde, hoeft dit niet gedaan te worden.
+Toch hebben we, ter indicatie, gekeken naar hoeveel kleiner deze State Space dan zou worden.
+
+Voor opdracht 1:
+In deze opdracht heb je een tijdslimiet van 2 uur. Hypothetisch gezien zou je binnen deze 120 minuten
+(2 * 60 minuten) maximaal  24 routes kunnen berijden, wanneer je heen en weer zou blijven rijden over
+het kortste traject; het traject tussen Rotterdam Centraal en  Schiedam Centrum. Dit is niet realistisch,
+aangezien je hiermee geen logische route rijdt maar enkel over een traject heen blijft rijden. Dit is niet nodig
+en ook niet bedoeling. Maar voor de maximale state space gaan we er voor nu vanuit dat dit wel zou kunnen.
+Dan zou de uitkomen op 24 in plaats van 28 mogelijke keuzes, wat een kleinere State Space zou betekenen.
+
+Voor opdracht 2:
+In deze opdracht heb je een tijdslimiet van 3 uur. Ook hier is het kortst durende traject het traject
+tussen Rotterdam Centraal en Schiedam Centrum, dat 5 minuten duurt. Binnen deze 180 minuten ( 3 * 60 minuten)
+zou je, weer hypothetisch gezien, 36 routes maximaal kunnen berijden. Hiervoor geldt hetzelfde; enkel over
+dit traject heen en weer rijden is geen realistische route. Echter zou dit de State Space voor opdracht
+twee wel enorm doen verkleinen, de waarde voor r in de state space zou hiermee namelijk van 89 naar 36
+mogelijke keuzes gaan. Aangezien juist de waarde van r de grootste invloed uitoefent in de grootte die
+de algehele State Space uiteindelijk omvat, is dit een enorm verschil in getalwaarde voor deze State Space.
