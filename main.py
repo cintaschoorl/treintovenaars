@@ -16,6 +16,3 @@ if __name__ == "__main__":
     # load the csv files to get all stations and connections
     railsystem.load_all_files(stations_path, uid_path, connections_path)
     print(railsystem.stations)
-    print(railsystem.connections)
-
-    
