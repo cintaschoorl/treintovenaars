@@ -11,23 +11,26 @@ class Route():
         self.max_duration = max_duration
         self.traject = []
 
-    def random_route(self, start_station):
+    def random_route(self):
         """
-        Genereert random route vanaf een specifiek startstation als een lijst met IUDs.
-        start_station: IUD van het startstation
+        Genereert random route vanaf een random startstation als een lijst met IUDs.
         """
-        if start_station not in self.neighbours[neighbour.id]:
-            raise ValueError(f"Start station {start_station} not found in neighbours.") # ik denk in de trajecten
-
-        current_station = start_station
-        self.traject.append(current_station)
+        # mogelijke startstations met 1 buurman
+        possible_start_stations = [
+            station for station, values in self.stations.items()
+            if len(values.get("neighbours", {})) == 1
+        ]
+        start_station = random.choice(possible_start_stations)
+        self.traject.append(start_station)
         self.duration = 0
+
         # houd bij welke stations je al hebt bezocht
-        visited = {current_station}
+        visited = {start_station}
+        current_station = start_station
 
         while self.duration < self.max_duration:
             # zo krijg je de buren van het huidige station
-            neighbour_station = self.stations[current_station]
+            neighbour_station = self.stations[current_station].get('neighbours', {})
 
             unvisited = {}
 
@@ -51,7 +54,6 @@ class Route():
             current_station = next_station
 
         return self.traject
-
 
 
 
