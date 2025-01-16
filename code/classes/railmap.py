@@ -7,7 +7,7 @@ class Railmap():
     The full route system with all trajectories
     """
     def __init__(self):
-        self.trajectories = {}
+        self.routes = {}
 
     def load_stations(self, station_path, uid_path, connections_path):
         """
@@ -50,31 +50,31 @@ class Railmap():
 
     def add_trajectory(self, train):
         """"Route aanroepen"""
-        self.trajectories[train.id] = train
+        self.routes[train.id] = train
 
 
     def quality_K(self):
 
-        possible_trajectories = len(self.trajectories)
+        possible_connections = len(self.routes)
 
         route = Route()
         route.random_route('bev')
-        ridden_trajectories = len(route.traject)
+        ridden_connections= len(route.traject)
 
 
         #Compute fraction p of used connections
-        self.p =  ridden_trajectories / possible_trajectories
+        self.p =  ridden_connections / possible_connections
 
         #self.p = 0.8 # example value -> needs to be computed!
 
         # computing the value for T
-        T = ridden_trajectories
+        T = ridden_connections
 
 
         # computing the value for the number of minutes it takes to drive over all trajectories
         Min = 0
 
-        for values in self.trajectories.values():
+        for values in self.routes.values():
 
             Min += values[1]
 
