@@ -15,13 +15,13 @@ class Route():
         """
         Genereert random route vanaf een random startstation als een lijst met IUDs.
         """
-        # mogelijke startstations met 1 buurman
+        # mogelijke startstations met 1 buuurman
         possible_start_stations = [
             station for station, values in self.stations.items()
             if len(values.get("neighbours", {})) == 1
         ]
 
-        # selecteer random uit de start stations 
+        # selecteer random uit de start stations
         start_station = random.choice(possible_start_stations)
         self.traject.append(start_station)
         self.duration = 0
