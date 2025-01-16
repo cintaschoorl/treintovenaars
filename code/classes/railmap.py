@@ -55,15 +55,15 @@ class Railmap():
 
     def quality_K(self):
 
-        possible_trajectories = len(self.trajectories)
+        possible_connections = len(self.trajectories)
 
         route = Route()
         route.random_route('bev')
-        ridden_trajectories = len(route.traject)
+        ridden_connections= len(route.traject)
 
 
         #Compute fraction p of used connections
-        self.p =  ridden_trajectories / possible_trajectories
+        self.p =  ridden_connections / possible_connections
 
         #self.p = 0.8 # example value -> needs to be computed!
 
