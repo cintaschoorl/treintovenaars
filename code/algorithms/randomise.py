@@ -1,3 +1,5 @@
+from code.classes.route import Route
+
 class Randomise():
     spent_time = 50
     start_station = 'slo'
