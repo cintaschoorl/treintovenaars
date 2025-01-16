@@ -16,8 +16,8 @@ class Route():
         Genereert random route vanaf een specifiek startstation als een lijst met IUDs.
         start_station: IUD van het startstation
         """
-        if start_station not in self.stations:
-            raise ValueError(f"Start station {start_station} not found in neighbours.")
+        if start_station not in self.neighbours[neighbour.id]:
+            raise ValueError(f"Start station {start_station} not found in neighbours.") # ik denk in de trajecten
 
         current_station = start_station
         self.traject.append(current_station)
