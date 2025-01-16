@@ -1,19 +1,21 @@
 import csv
 from code.classes.station import Station
-from code.classes.connection import Connection
+from code.classes.route import Route
 
 class Railmap():
     """
     The full route system with all trajectories
     """
     def __init__(self):
-        self.routes = {}
+        self.stations = []
 
     def load_stations(self, station_path, uid_path, connections_path):
         """
         Reads station, connections and uid file paths, and creates:
-            - stations: dict of stations, with a dict per station with
-              neighbouring connections and their travel time
+            - stations: list of Station object, with for each station:
+                - name: str
+                - coordinates: (x, y)
+                - neighbours: dict with neighbours and traveltimes as values
         """
         # load uid's into dictionary
         uids = {}
@@ -25,14 +27,17 @@ class Railmap():
                 uids[name] = uid
 
         # load the stations with coordinates and uid's
-        self.stations = {}
+        name_for_station = {} # helper dict to find Station objects
         with open(station_path, 'r') as station_f:
             station_reader = csv.reader(station_f)
             next(station_reader)
             for row in station_reader:
                 name, y, x = row
                 uid = uids.get(name)
-                self.stations[name] = (Station(name, float(y), float(x), uid))
+                if uid:
+                    station = Station(name, float(y), float(x), uid)
+                    self.stations.append(station)
+                    name_for_station[name] = station
 
         # load connections and add neighbours
         with open(connections_path, 'r') as connect_f:
@@ -41,8 +46,8 @@ class Railmap():
 
             for row in connect_reader:
                 station1_name, station2_name, travel_time = row
-                station1 = self.stations.get(station1_name)
-                station2 = self.stations.get(station2_name)
+                station1 = name_for_station.get(station1_name)
+                station2 = name_for_station.get(station2_name)
                 if station1 and station2:
                     station1.add_neighbour(station2, int(travel_time))
                     station2.add_neighbour(station1, int(travel_time))
