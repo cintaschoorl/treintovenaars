@@ -6,13 +6,13 @@ class Railmap():
     """
     The full route system with all trajectories
     """
-    def __init__(self, ):
+    def __init__(self):
         self.trajectories = {}
 
     def load_stations(self, station_path, uid_path, connections_path):
         """
         Reads station, connections and uid file paths, and creates:
-            - stations: dict of stations, with a dict per station with 
+            - stations: dict of stations, with a dict per station with
               neighbouring connections and their travel time
         """
         # load uid's into dictionary
@@ -23,7 +23,7 @@ class Railmap():
             for row in uid_reader:
                 name, uid = row
                 uids[name] = uid
-        
+
         # load the stations with coordinates and uid's
         self.stations = {}
         with open(station_path, 'r') as station_f:
@@ -46,7 +46,7 @@ class Railmap():
                 if station1 and station2:
                     station1.add_neighbour(station2, int(travel_time))
                     station2.add_neighbour(station1, int(travel_time))
-        
+
 
     def add_trajectory(self, train):
         """"Route aanroepen"""
@@ -54,13 +54,29 @@ class Railmap():
 
 
     def quality_K(self):
+
+        possible_trajectories = len(self.trajectories)
+
+        route = Route()
+        route.random_route('bev')
+        ridden_trajectories = len(route.traject)
+
+
         #Compute fraction p of used connections
-        self.p = 0.8 # example value -> needs to be computed!
-        T = len(self.trajectories)
+        self.p =  ridden_trajectories / possible_trajectories
+
+        #self.p = 0.8 # example value -> needs to be computed!
+
+        # computing the value for T
+        T = ridden_trajectories
+
+
+        # computing the value for the number of minutes it takes to drive over all trajectories
         Min = 0
 
         for values in self.trajectories.values():
+
             Min += values[1]
 
-        # compute quality of the lines K
-        return (self.p * 10000 - (T * 100 + Min))
+        # computing the quality of the lines K
+        return int(self.p * 10000 - (T * 100 + Min))
