@@ -1,5 +1,4 @@
 import random
-from code.classes.route import Route
 from code.classes.railmap import Railmap
 
 
