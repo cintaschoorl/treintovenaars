@@ -2,19 +2,18 @@ import random
 
 class Route():
     "Create a train trajectory within a given timeframe"
-    def __init__(self, stations: dict, max_duration: int):
+    def __init__(self, stations: list, max_duration: int):
         """
-        Neighbours is een dict die per station de omliggende buren
+        Stations is een list die per station de omliggende buren
         en reistijd bevat.
         """
         self.stations = stations
         self.max_duration = max_duration
         self.route = []
 
-    def get_neighbours(self, current_station):
-        neighbour_station = self.stations[current_station].get('neighbours', {})
-        next_station, travel_time = random.choice(list(neighbour_station.items()))
-        return next_station, travel_time
+    def get_neighbours(self, station):
+        neighbour_stations = station.neighbours
+        return neighbour_stations
 
     def is_valid(self, spent_time):
         if spent_time > self.max_duration:
@@ -22,60 +21,9 @@ class Route():
         else:
             return True
 
-    def add_station(self, next_station):
-        self.route.append(next_station)
+    def add_station(self, station):
+        self.route.append(station)
         return self.route
-
-
-
-stations = {
-    "slo": {
-        "name": "Amsterdam Sloterdijk",
-        "coordinates": (52.3881, 4.8372),
-        "neighbours": {
-            "haa": 10,
-            "zaa": 12,
-        },
-    },
-    "haa": {
-        "name": "Haarlem",
-        "coordinates": (52.3874, 4.6462),
-        "neighbours": {
-            "slo": 10,
-            "zaa": 8,
-        },
-    },
-    "zaa": {
-        "name": "Zaandam",
-        "coordinates": (52.4381, 4.8245),
-        "neighbours": {
-            "haa": 8,
-            "slo": 12,
-        },
-    },
-    "acs": {
-        "name": "Amsterdam Centraal",
-        "coordinates": (52.3784, 4.9003),
-        "neighbours": {
-            "slo": 5,
-        },
-    },
-}
-
-spent_time = 50
-start_station = 'slo'
-route = Route(stations, max_duration=120)
-route.add_station(start_station)
-next_station, travel_time = route.get_neighbours(start_station)
-spent_time += travel_time
-if route.is_valid(spent_time) == True:
-    whole_route = route.add_station(next_station)
-start_station = next_station
-print(whole_route)
-
-
-
-
 
 
     # def add_name(self, train_name):
