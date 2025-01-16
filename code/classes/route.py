@@ -9,55 +9,69 @@ class Route():
         """
         self.stations = stations
         self.max_duration = max_duration
-        self.traject = []
+        self.route = []
 
-    def random_route(self):
-        """
-        Genereert random route vanaf een random startstation als een lijst met IUDs.
-        """
-        # mogelijke startstations met 1 buuurman
-        possible_start_stations = [
-            station for station, values in self.stations.items()
-            if len(values.get("neighbours", {})) == 1
-        ]
+    def get_neighbours(self, current_station):
+        neighbour_station = self.stations[current_station].get('neighbours', {})
+        next_station, travel_time = random.choice(list(neighbour_station.items()))
+        return next_station, travel_time
 
-        # selecteer random uit de start stations
-        start_station = random.choice(possible_start_stations)
-        self.traject.append(start_station)
-        self.duration = 0
+    def is_valid(self, spent_time):
+        if spent_time > self.max_duration:
+            return False
+        else:
+            return True
 
-        # houd bij welke stations je al hebt bezocht
-        visited = {start_station}
-        current_station = start_station
-
-        while self.duration < self.max_duration:
-            # zo krijg je de buren van het huidige station
-            neighbour_station = self.stations[current_station].get('neighbours', {})
-
-            unvisited = {}
-
-            for station, travel_time in neighbour_station.items():
-                if station not in visited:
-                    unvisited[station] = travel_time
-
-            # stop de loop als er geen buren meer over zijn
-            if not unvisited:
-                break
-
-            # kies random volgende station
-            next_station, travel_time = random.choice(list(unvisited.items()))
-
-            if self.duration + travel_time > self.max_duration:
-                break
-
-            self.traject.append(next_station)
-            self.duration += travel_time
-            visited.add(next_station)
-            current_station = next_station
-
-        return self.traject
+    def add_station(self, next_station):
+        self.route.append(next_station)
+        return self.route
 
 
+
+stations = {
+    "slo": {
+        "name": "Amsterdam Sloterdijk",
+        "coordinates": (52.3881, 4.8372),
+        "neighbours": {
+            "haa": 10,
+            "zaa": 12,
+        },
+    },
+    "haa": {
+        "name": "Haarlem",
+        "coordinates": (52.3874, 4.6462),
+        "neighbours": {
+            "slo": 10,
+            "zaa": 8,
+        },
+    },
+    "zaa": {
+        "name": "Zaandam",
+        "coordinates": (52.4381, 4.8245),
+        "neighbours": {
+            "haa": 8,
+            "slo": 12,
+        },
+    },
+    "acs": {
+        "name": "Amsterdam Centraal",
+        "coordinates": (52.3784, 4.9003),
+        "neighbours": {
+            "slo": 5,
+        },
+    },
+}
+
+spent_time = 50
+start_station = 'slo'
+route = Route(stations, max_duration=120)
+route.add_station(start_station)
+next_station, travel_time = route.get_neighbours(start_station)
+spent_time += travel_time
+if route.is_valid(spent_time) == True:
+    whole_route = route.add_station(next_station)
+start_station = next_station
+print(whole_route)
 
 
 
