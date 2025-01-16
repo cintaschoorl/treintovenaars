@@ -10,8 +10,7 @@ class Station():
         - neighbours: dictionary containing neighbouring stations and their travel times
         """
         self.name = name
-        self.y = y
-        self.x = x
+        self.coordinates = (x, y)
         self.id = uid
         self.neighbours = {}
 
@@ -21,8 +20,7 @@ class Station():
             print(f"{neighbour} already present.")
             return
         # otherwise add to dict
-        self.neighbours[neighbour] = travel_time
-
+        self.neighbours[neighbour] = travel_time    
 
     def __repr__(self):
         "Represent object with its ID in a list/dict"
