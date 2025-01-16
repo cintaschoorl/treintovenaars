@@ -1,5 +1,5 @@
-import random
 from code.classes.railmap import Railmap
+from code.algorithms import randomise
 
 
 
@@ -13,8 +13,10 @@ if __name__ == "__main__":
 
     # load the csv files to get all stations and connections
     railsystem.load_stations(stations_path, uid_path, connections_path)
-    print(railsystem.stations)
 
-    # test run to print the attributes of a random station
-    random_station = random.choice(railsystem.stations)
-    print(f"Name: {random_station.name}\nCoordinates: {random_station.coordinates}\nNeighbours: {random_station.neighbours}")
+    # create random route
+    route1, r1_time = randomise.randomise_route(railsystem.stations, 120)
+    print(f"\nRandom route: {route1}\nTotal duration: {r1_time}")
+
+    K_route1 = railsystem.quality_K(route1, r1_time)
+    print(f"Quality of route 1: {K_route1}")

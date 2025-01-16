@@ -58,30 +58,24 @@ class Railmap():
         self.routes[train.id] = train
 
 
-    def quality_K(self):
-
-        possible_connections = len(self.routes)
-
-        route = Route()
-        route.random_route('bev')
-        ridden_connections= len(route.traject)
-
+    def quality_K(self, route, route_time):
+        # compute total connections
+        total_connections = 0
+        for station in self.stations:
+            total_connections += len(station.neighbours)
+        
+        # ! hier moeten nog de unieke correcte connecties berekend worden!
+        # dit is een versimpeling voor een werkend voorbeeld
+        ridden_connections = len(route)
 
         #Compute fraction p of used connections
-        self.p =  ridden_connections / possible_connections
+        self.p =  ridden_connections / total_connections
 
-        #self.p = 0.8 # example value -> needs to be computed!
+        # computing the value for T (weer voorbeeld, nog aanpassen)
+        T = 7
 
-        # computing the value for T
-        T = ridden_connections
-
-
-        # computing the value for the number of minutes it takes to drive over all trajectories
-        Min = 0
-
-        for values in self.routes.values():
-
-            Min += values[1]
+        # !! (aanpassen) computing the value for the number of minutes it takes to drive over all trajectories
+        Min = route_time
 
         # computing the quality of the lines K
         return int(self.p * 10000 - (T * 100 + Min))
