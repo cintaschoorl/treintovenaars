@@ -20,6 +20,8 @@ class Route():
             station for station, values in self.stations.items()
             if len(values.get("neighbours", {})) == 1
         ]
+
+        # selecteer random uit de start stations 
         start_station = random.choice(possible_start_stations)
         self.traject.append(start_station)
         self.duration = 0
