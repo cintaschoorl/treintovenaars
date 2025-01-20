@@ -12,8 +12,7 @@ class Route():
         self.route = []
 
     def get_neighbours(self, station):
-        neighbour_stations = station.neighbours
-        return neighbour_stations
+        return station.neighbours
 
     def is_valid(self, spent_time):
         if spent_time > self.max_duration:
@@ -24,6 +23,13 @@ class Route():
     def add_station(self, station):
         self.route.append(station)
         return self.route
+
+    def get_possible_start(self):
+        start_stations = []
+        for station in self.stations:
+            if len(station.neighbours) == 1:
+                start_stations.append(station)
+        return start_stations
 
 
     # def add_name(self, train_name):
