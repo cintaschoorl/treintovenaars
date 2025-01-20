@@ -10,17 +10,16 @@ def randomise_route(stations_list, max_duration=120):
     possible_start_stations = route.get_possible_start()
     print(possible_start_stations)
 
-    # pick random starting station with 0,5 possibility that it is a start stations
+    # pick random starting station with 0.5 possibility that it is a start stations
     if random.random() < 0.5:
         current_station = random.choice(possible_start_stations)
     else:
         current_station = random.choice(route.stations)
 
-
     route.add_station(current_station)
     print(f"Starting route at: {current_station.name}")
 
-    previous_station = None
+    previous_stations = {current_station}
 
     while spent_time <= max_duration:
 
@@ -43,7 +42,7 @@ def randomise_route(stations_list, max_duration=120):
         if route.is_valid((spent_time + next_time)):
             # update route and time with the new connection
             route.add_station(next_station)
-            previous_station = current_station
+            previous_stations.add(next_station)
             current_station = next_station
             spent_time += next_time
             print(f"{next_station} added to route, travel time: {next_time}.\nTotal route duration: {spent_time}.")
