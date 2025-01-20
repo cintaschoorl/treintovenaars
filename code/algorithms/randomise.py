@@ -40,7 +40,7 @@ def randomise_route(stations_list, max_duration=120):
         # validate if it will be longer than max duration
         if route.is_valid((spent_time + next_time)):
             # update route and time with the new connection
-            route.add_station(next_station)
+            route.add_station(next_station, next_time)
             previous_stations.add(next_station)
             current_station = next_station
             spent_time += next_time

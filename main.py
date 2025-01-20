@@ -23,6 +23,7 @@ if __name__ == "__main__":
 
         route = Route(railsystem.stations, max_duration)
         route.route = route_stations
+        route.travel_time = total_time
         route.id = f"train_{i + 1}"
 
         railsystem.add_trajectory(route)

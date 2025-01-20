@@ -18,11 +18,11 @@ class Route():
     def is_valid(self, spent_time):
         if spent_time > self.max_duration:
             return False
-        else:
-            return True
+        return True
 
-    def add_station(self, station):
+    def add_station(self, station, travel_time=0):
         self.route.append(station)
+        self.travel_time += travel_time
         return self.route
 
     def get_possible_start(self):
