@@ -6,12 +6,17 @@ def randomise_route(stations_list, max_duration=120):
     spent_time = 0
     route = Route(stations_list, max_duration)
 
-    # get a list with possible start stations
+    # get a list with possible start stations (1 neighbour)
     possible_start_stations = route.get_possible_start()
     print(possible_start_stations)
 
-    # pick random starting station
-    current_station = random.choice(possible_start_stations)
+    # pick random starting station with 0,5 possibility that it is a start stations
+    if random.random() < 0.5:
+        current_station = random.choice(possible_start_stations)
+    else:
+        current_station = random.choice(route.stations)
+
+
     route.add_station(current_station)
     print(f"Starting route at: {current_station.name}")
 
