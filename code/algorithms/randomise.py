@@ -32,6 +32,9 @@ def randomise_route(stations_list, max_duration=120):
         for station, time in neighbours.items():
             if station != previous_station:
                 valid_neighbours[station] = time
+        if not valid_neighbours:
+            print("No valid neighbours left. Ending Route")
+            break
 
         # get random neighbour and travel time
         next_station, next_time =  random.choice(list(valid_neighbours.items()))
