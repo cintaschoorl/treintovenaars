@@ -8,7 +8,6 @@ def randomise_route(stations_list, max_duration=120):
 
     # get a list with possible start stations (1 neighbour)
     possible_start_stations = route.get_possible_start()
-    print(possible_start_stations)
 
     # pick random starting station with 0.5 possibility that it is a start stations
     if random.random() < 0.5:
@@ -26,10 +25,10 @@ def randomise_route(stations_list, max_duration=120):
         # get current neighbours
         neighbours = route.get_neighbours(current_station)
 
-        # get the neighbours that are not the previous stations
+        # get the neighbours that are not in the previous stations
         valid_neighbours = {}
         for station, time in neighbours.items():
-            if station != previous_stations:
+            if station not in previous_stations:
                 valid_neighbours[station] = time
         if not valid_neighbours:
             print("No valid neighbours left. Ending Route")

@@ -8,6 +8,7 @@ class Railmap():
     """
     def __init__(self):
         self.stations = []
+        self.routes = {}
 
     def load_stations(self, station_path, uid_path, connections_path):
         """
@@ -58,24 +59,32 @@ class Railmap():
         self.routes[train.id] = train
 
 
-    def quality_K(self, route, route_time):
+    def quality_K(self):
         # compute total connections
         total_connections = 0
         for station in self.stations:
             total_connections += len(station.neighbours)
-        
+
         # ! hier moeten nog de unieke correcte connecties berekend worden!
         # dit is een versimpeling voor een werkend voorbeeld
-        ridden_connections = len(route)
+        ridden_connections = set()
+        total_time = 0
+        total_routes = len(self.routes)
+
+        for train_id, route in self.routes.items():
+            for i in range(len(route.route) - 1):
+                station1 = route.route[i]
+                station2 = route.route[i + 1]
+
+                # Add connection as a tuple (station1, station2) and its reverse
+                ridden_connections.add((station1, station2))
+                ridden_connections.add((station2, station1))
+
+            # Sum the travel time of the route
+            total_time += route.total_travel_time()
 
         #Compute fraction p of used connections
-        self.p =  ridden_connections / total_connections
-
-        # computing the value for T (weer voorbeeld, nog aanpassen)
-        T = 7
-
-        # !! (aanpassen) computing the value for the number of minutes it takes to drive over all trajectories
-        Min = route_time
+        p =  len(ridden_connections) / total_connections
 
         # computing the quality of the lines K
-        return int(self.p * 10000 - (T * 100 + Min))
+        return int(p * 10000 - (total_routes * 100 + total_time))

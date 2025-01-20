@@ -10,6 +10,7 @@ class Route():
         self.stations = stations
         self.max_duration = max_duration
         self.route = []
+        self.travel_time = 0
 
     def get_neighbours(self, station):
         return station.neighbours
@@ -30,6 +31,9 @@ class Route():
             if len(station.neighbours) == 1:
                 start_stations.append(station)
         return start_stations
+
+    def total_travel_time(self):
+        return self.travel_time
 
 
     # def add_name(self, train_name):
