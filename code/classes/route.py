@@ -8,6 +8,7 @@ class Route():
         en reistijd bevat.
         """
         self.stations = stations
+        self.start_stations = []
         self.max_duration = max_duration
         self.route = []
         self.travel_time = 0
@@ -26,11 +27,17 @@ class Route():
         return self.route
 
     def get_possible_start(self):
-        start_stations = []
         for station in self.stations:
             if len(station.neighbours) == 1:
-                start_stations.append(station)
-        return start_stations
+                self.start_stations.append(station)
+        return self.start_stations
+
+    def pick_start(self):
+        if random.random() < 0.5:
+            current_station = random.choice(self.start_stations)
+        else:
+            current_station = random.choice(self.stations)
+        return current_station
 
     def total_travel_time(self):
         return self.travel_time
