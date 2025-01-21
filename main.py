@@ -16,6 +16,8 @@ if __name__ == "__main__":
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
+    ### Random ###
+
     output_random = "output/random_results.csv"
 
     # Create CSV header
@@ -54,15 +56,8 @@ if __name__ == "__main__":
 
     print(f"\nRandom results have been saved to {output_random}")
 
-    # create random route
-    #route1, r1_time = randomise.randomise_route(railsystem.stations, 120)
-    #print(f"\nRandom route: {route1}\nTotal duration: {r1_time}")
-
-    #K_route1 = railsystem.quality_K(route1, r1_time)
-    #print(f"Quality of route 1: {K_route1}")
-
-
     ### Hill Climber ###
+
     output_hillclimber = "output/hillclimber_results.csv"
 
     # load the railmap

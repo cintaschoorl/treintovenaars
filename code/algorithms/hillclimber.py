@@ -45,6 +45,8 @@ def hill_climber(railmap, iterations, max_duration, num_routes):
                 best_railmap = deepcopy(new_railmap)
                 best_score = new_score
 
+        all_scores.append(current_score)
+
         # Debug output 
         # print(f"Iteration {i + 1}: Current Score = {current_score}, Best Score = {best_score}")
 
