@@ -31,7 +31,7 @@ def hill_climber(railmap, iterations, max_duration, num_routes):
 
     # iteratively improve solution
     for i in range(iterations):
-        # generate a new solution by mutating the current solution
+        # Generate a new solution by mutating the current solution
         new_railmap = modify_solution(current_railmap, max_duration)
         new_score = new_railmap.quality_K()
 
@@ -86,6 +86,7 @@ def generate_initial_solution(railmap, n_routes, max_duration):
 def modify_solution(current_railmap, max_duration):
     """
     Generate a new solution by modifying the current solution.
+    This simplified version allows adding or removing a station in a route.
 
     Input: 
         - current_railmap (Railmap): current Railmap object
@@ -94,43 +95,82 @@ def modify_solution(current_railmap, max_duration):
     Returns:
         - New modified Railmap solution
     """
-    # create deepcopy of current solution
+    # Create a copy of the current solution
     new_railmap = deepcopy(current_railmap)
 
-    # select random route to modify
+    # Select a random route to modify
     route_id = random.choice(list(new_railmap.routes.keys()))
     route_to_change = new_railmap.routes[route_id]
 
-    # select random station modification: add, remove, or replace a station
-    modification = random.choice(["add", "remove", "replace"])
-
+    # select random station modification: add or remove a station
+    modification = random.choice(["add", "remove"])
     if modification == "add":
-        # Add a neighbor to the route if possible
-        if route_to_change.route: 
-            # if route not empty
+        # Add a neighboring station if possible
+        if route_to_change.route:
             current_station = random.choice(route_to_change.route)
             neighbours = current_station.neighbours
             if neighbours:
                 new_station, travel_time = random.choice(list(neighbours.items()))
                 if route_to_change.is_valid(route_to_change.travel_time + travel_time):
                     route_to_change.add_station(new_station, travel_time)
- 
     elif modification == "remove":
         # remove a station from the route if there is more than one station
         if len(route_to_change.route) > 1:
             station_to_remove = random.choice(route_to_change.route)
             route_to_change.route.remove(station_to_remove)
 
-    elif modification == "replace":
-        # Replace a station in the route with a neighbor
-        if route_to_change.route:
-            current_station = random.choice(route_to_change.route)
-            neighbours = current_station.neighbours
-            if neighbours:
-                new_station, travel_time = random.choice(list(neighbours.items()))
-                if route_to_change.is_valid(route_to_change.travel_time - travel_time):
-                    route_idx = route_to_change.route.index(current_station)
-                    route_to_change.route[route_idx] = new_station
-
     return new_railmap
+
+
+
+# def modify_solution(current_railmap, max_duration):
+#     """
+#     Generate a new solution by modifying the current solution.
+
+#     Input: 
+#         - current_railmap (Railmap): current Railmap object
+#         - max_duration (int): maximum duration for each route
+
+#     Returns:
+#         - New modified Railmap solution
+#     """
+#     # create deepcopy of current solution
+#     new_railmap = deepcopy(current_railmap)
+
+#     # select random route to modify
+#     route_id = random.choice(list(new_railmap.routes.keys()))
+#     route_to_change = new_railmap.routes[route_id]
+
+#     # select random station modification: add, remove, or replace a station
+#     modification = random.choice(["add", "remove", "replace"])
+
+#     if modification == "add":
+#         # Add a neighbor to the route if possible
+#         if route_to_change.route: 
+#             # if route not empty
+#             current_station = random.choice(route_to_change.route)
+#             neighbours = current_station.neighbours
+#             if neighbours:
+#                 new_station, travel_time = random.choice(list(neighbours.items()))
+#                 if route_to_change.is_valid(route_to_change.travel_time + travel_time):
+#                     route_to_change.add_station(new_station, travel_time)
+ 
+#     elif modification == "remove":
+#         # remove a station from the route if there is more than one station
+#         if len(route_to_change.route) > 1:
+#             station_to_remove = random.choice(route_to_change.route)
+#             route_to_change.route.remove(station_to_remove)
+
+#     elif modification == "replace":
+#         # Replace a station in the route with a neighbor
+#         if route_to_change.route:
+#             current_station = random.choice(route_to_change.route)
+#             neighbours = current_station.neighbours
+#             if neighbours:
+#                 new_station, travel_time = random.choice(list(neighbours.items()))
+#                 if route_to_change.is_valid(route_to_change.travel_time - travel_time):
+#                     route_idx = route_to_change.route.index(current_station)
+#                     route_to_change.route[route_idx] = new_station
+
+#     return new_railmap
 
