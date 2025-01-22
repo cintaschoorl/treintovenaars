@@ -1,6 +1,8 @@
 from code.classes.railmap import Railmap
 from code.algorithms.randomise import randomise_route
+from code.algorithms.hillclimber import hill_climber
 from  code.classes.route import Route
+from code.visualization.statistics import plot_hill_climber
 import csv
 import os
 
@@ -15,10 +17,12 @@ if __name__ == "__main__":
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    output_file = "output/random_results.csv"
+    ### Random ###
+
+    output_random = "output/random_results.csv"
 
     # Create CSV header
-    with open(output_file, 'w', newline='') as csvfile:
+    with open(output_random, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['quality_score'])
 
@@ -47,15 +51,44 @@ if __name__ == "__main__":
             #print(f"\n quality score: {K}")
 
             # Write result to CSV
-        with open(output_file, 'a', newline='') as csvfile:
+        with open(output_random, 'a', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow([K])
 
-    print(f"\nResults have been saved to {output_file}")
+    print(f"\nRandom results have been saved to {output_random}")
 
-    # create random route
-    #route1, r1_time = randomise.randomise_route(railsystem.stations, 120)
-    #print(f"\nRandom route: {route1}\nTotal duration: {r1_time}")
+    ### Hill Climber ###
 
-    #K_route1 = railsystem.quality_K(route1, r1_time)
-    #print(f"Quality of route 1: {K_route1}")
+    output_hillclimber = "output/hillclimber_results.csv"
+
+    # load the railmap
+    railmap = Railmap()
+    railmap.load_stations(stations_path, uid_path, connections_path)
+
+    # parameters
+    iterations = 1000
+    num_routes = 7
+    max_duration = 120
+
+    # run algorithm
+    best_railmap, best_score, all_scores = hill_climber(railmap, iterations, max_duration, num_routes)
+
+    # print results
+    print(f"\nBest Quality Score (K): {best_score}")
+    for train_name, route in best_railmap.routes.items():
+        print(train_name,":",route.route,"\n")
+
+    # write results to CSV
+    with open(output_hillclimber, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+
+        # write header
+        writer.writerow(["iteration", "quality_score"])
+
+        # write all scores with iteration index
+        for i, score in enumerate(all_scores, start=1):
+            writer.writerow([i, score])
+
+    print(f"Hill Climber results have been saved to {output_hillclimber}")
+
+    plot_hill_climber()
