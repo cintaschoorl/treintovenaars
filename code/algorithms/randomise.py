@@ -22,17 +22,17 @@ def randomise_route(stations_list, max_duration=120):
         neighbours = route.get_neighbours(current_station)
 
         # get the neighbours that are not in the previous stations
-        #valid_neighbours = {}
-        #for station, time in neighbours.items():
-            #if station not in previous_stations:
-                #valid_neighbours[station] = time
-        #if not valid_neighbours:
-            #print("No valid neighbours left. Ending Route")
-            #break
+        valid_neighbours = {}
+        for station, time in neighbours.items():
+            if station not in previous_stations:
+                valid_neighbours[station] = time
+        if not valid_neighbours:
+            print("No valid neighbours left. Ending Route")
+            break
 
         # get random neighbour and travel time
-        #next_station, next_time =  random.choice(list(valid_neighbours.items()))
-        next_station, next_time =  random.choice(list(neighbours.items()))
+        next_station, next_time =  random.choice(list(valid_neighbours.items()))
+        #next_station, next_time =  random.choice(list(neighbours.items()))
 
         # validate if it will be longer than max duration
         if route.is_valid((spent_time + next_time)):
