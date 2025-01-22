@@ -2,6 +2,7 @@ from code.classes.railmap import Railmap
 from code.algorithms.randomise import randomise_route
 from code.algorithms.hillclimber import hill_climber
 from  code.classes.route import Route
+from code.visualization.statistics import plot_hill_climber
 import csv
 import os
 
@@ -71,7 +72,7 @@ if __name__ == "__main__":
 
     # run algorithm
     best_railmap, best_score, all_scores = hill_climber(railmap, iterations, max_duration, num_routes)
-    
+
     # print results
     print(f"\nBest Quality Score (K): {best_score}")
     for train_name, route in best_railmap.routes.items():
@@ -90,4 +91,4 @@ if __name__ == "__main__":
 
     print(f"Hill Climber results have been saved to {output_hillclimber}")
 
-   
+    plot_hill_climber()
