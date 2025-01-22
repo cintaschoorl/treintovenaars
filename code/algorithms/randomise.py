@@ -27,7 +27,7 @@ def randomise_route(stations_list, max_duration=120):
             if station not in previous_stations:
                 valid_neighbours[station] = time
         if not valid_neighbours:
-            print("No valid neighbours left. Ending Route")
+            #print("No valid neighbours left. Ending Route")
             break
 
         # get random neighbour and travel time

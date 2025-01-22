@@ -4,6 +4,7 @@ from code.algorithms.randomise import randomise_route
 from code.algorithms.hillclimber_copy import hill_climber
 from  code.classes.route import Route
 from code.visualization.statistics import plot_hill_climber
+from code.visualization.statistics import plot_random
 import csv
 import os
 
@@ -57,6 +58,9 @@ if __name__ == "__main__":
             writer.writerow([K])
 
     print(f"\nRandom results have been saved to {output_random}")
+
+    # make a histogram of the K values in csv file
+    plot_random('output/random_results.csv')
 
     ### Hill Climber ###
 
