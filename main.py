@@ -1,5 +1,6 @@
 from code.classes.railmap import Railmap
 from code.algorithms.randomise import randomise_route
+from code.algorithms.randomise import randomise_heuristics
 # from code.algorithms.hillclimber import hill_climber
 from code.algorithms.hillclimber_copy import hill_climber
 from  code.classes.route import Route
@@ -28,8 +29,8 @@ if __name__ == "__main__":
         writer = csv.writer(csvfile)
         writer.writerow(['quality_score'])
 
-    # het algoritme 500 keer laten runnen
-    for iteration in range(500):
+    # het random algoritme 5000 keer laten runnen
+    for iteration in range(5000):
         railsystem = Railmap()
 
         # load the csv files to get all stations and connections
@@ -59,8 +60,48 @@ if __name__ == "__main__":
 
     print(f"\nRandom results have been saved to {output_random}")
 
+
+    output_random_heur = "output/random_heur_results.csv"
+
+    # Create CSV header
+    with open(output_random_heur, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(['quality_score'])
+
+    # het random algoritme 5000 keer laten runnen
+    for iteration in range(5000):
+        railsystem = Railmap()
+
+        # load the csv files to get all stations and connections
+        railsystem.load_stations(stations_path, uid_path, connections_path)
+
+        number_routes = 7
+        max_duration = 120
+
+        for i in range(number_routes):
+            route_stations, total_time = randomise_heuristics(railsystem.stations, max_duration)
+
+            route = Route(railsystem.stations, max_duration)
+            route.route = route_stations
+            #print(route.route)
+            route.travel_time = total_time
+            route.id = f"train_{i + 1}"
+
+            railsystem.add_trajectory(route)
+
+        K = railsystem.quality_K()
+            #print(f"\n quality score: {K}")
+
+                # Write result to CSV
+        with open(output_random_heur, 'a', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow([K])
+
+    print(f"\nRandom with heuristics results have been saved to {output_random_heur}")
+
     # make a histogram of the K values in csv file
     plot_random('output/random_results.csv')
+    plot_random('output/random_heur_results.csv')
 
     ### Hill Climber ###
 
