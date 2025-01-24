@@ -47,7 +47,13 @@ def randomise_route(stations_list, max_duration=120):
 
     return route.route, spent_time
 
-def randomise_heuristics(stations_list, max_duration):
+# dict om de gebruiks frequentie bij te houden in de lijnvoering (dus van meerdere routes)
+global_connection_usage = {}
+
+def randomise_heuristics(stations_list, max_duration, first_route = False):
+    if first_route:
+        global_connection_usage.clear()
+
     spent_time = 0
     route = Route(stations_list, max_duration)
 
@@ -75,26 +81,46 @@ def randomise_heuristics(stations_list, max_duration):
         if not valid_neighbours:
             break
 
-        # seperate remaining neighbours into new and used connections
-        new_connections = {}
-        used_connections_dict = {}
-
+        # Score neighbours based on global connection usage
+        neighbour_scores = {}
         for station, time in valid_neighbours.items():
             connection = tuple(sorted([current_station.name, station.name]))
-            if connection not in used_connections:
-                new_connections[station] = time
-            else:
-                used_connections_dict[station] = time
+            usage_count = global_connection_usage.get(connection, 0)
+            # Lagere score = betere keuze
+            neighbour_scores[station] = usage_count
+
+        # Sorteer buren op basis van globale gebruiksfrequentie (minst gebruikt eerst)
+        sorted_neighbours = sorted(
+            valid_neighbours.items(),
+            key=lambda x: neighbour_scores[x[0]]
+        )
+
+        # 85% kans om de minst gebruikte verbinding te kiezen
+        if sorted_neighbours and random.random() < 0.85:
+            next_station, next_time = sorted_neighbours[0]
+        else:
+            next_station, next_time = random.choice(sorted_neighbours)
+
+        # seperate remaining neighbours into new and used connections
+        #new_connections = {}
+        #used_connections_dict = {}
+
+        #for station, time in valid_neighbours.items():
+        #    connection = tuple(sorted([current_station.name, station.name]))
+        #    if connection not in used_connections:
+        #        new_connections[station] = time
+        #    else:
+        #        used_connections_dict[station] = time
 
         # choose from new connections with 85% probability if available
-        if new_connections and random.random() < 0.85:
-            next_station, next_time = random.choice(list(new_connections.items()))
-        else:
+        #if new_connections and random.random() < 0.85:
+        #    next_station, next_time = random.choice(list(new_connections.items()))
+        #else:
             # fall back to any valid neighbour (new and used)
-            all_valid = {**new_connections, **used_connections_dict}
-            if not all_valid:
-                break
-            next_station, next_time = random.choice(list(all_valid.items()))
+            #all_valid = {**new_connections, **used_connections_dict}
+            #if not all_valid:
+            #    break
+            #next_station, next_time = random.choice(list(all_valid.items()))
 
         # get random neighbour and travel time
         #next_station, next_time =  random.choice(list(valid_neighbours.items()))
@@ -106,8 +132,8 @@ def randomise_heuristics(stations_list, max_duration):
 
             # update used_connections
             connection = tuple(sorted([current_station.name, next_station.name]))
-            used_connections.add(connection)
-            
+            global_connection_usage[connection] = global_connection_usage.get(connection, 0) + 1
+
             previous_station = current_station
             current_station = next_station
             spent_time += next_time

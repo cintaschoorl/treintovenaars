@@ -29,8 +29,8 @@ if __name__ == "__main__":
         writer = csv.writer(csvfile)
         writer.writerow(['quality_score'])
 
-    # het random algoritme 5000 keer laten runnen
-    for iteration in range(5000):
+    # het random algoritme 10000 keer laten runnen
+    for iteration in range(10000):
         railsystem = Railmap()
 
         # load the csv files to get all stations and connections
@@ -68,8 +68,8 @@ if __name__ == "__main__":
             writer = csv.writer(csvfile)
             writer.writerow(['quality_score'])
 
-    # het random algoritme 5000 keer laten runnen
-    for iteration in range(5000):
+    # het random algoritme met heuristieken 10000 keer laten runnen
+    for iteration in range(10000):
         railsystem = Railmap()
 
         # load the csv files to get all stations and connections
@@ -79,8 +79,15 @@ if __name__ == "__main__":
         max_duration = 120
 
         for i in range(number_routes):
-            route_stations, total_time = randomise_heuristics(railsystem.stations, max_duration)
+             # geef aan dat dit de eerste route is van een nieuwe lijnvoering
+            first_route = (i == 0)
 
+            route_stations, total_time = randomise_heuristics(
+                railsystem.stations,
+                max_duration,
+                first_route
+            )
+            
             route = Route(railsystem.stations, max_duration)
             route.route = route_stations
             #print(route.route)
