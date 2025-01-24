@@ -1,8 +1,7 @@
 from code.classes.railmap import Railmap
 from code.algorithms.randomise import randomise_route
 from code.algorithms.randomise import randomise_heuristics
-# from code.algorithms.hillclimber import hill_climber
-from code.algorithms.hillclimber_copy import hill_climber
+from code.algorithms.hillclimber import hill_climber
 from  code.classes.route import Route
 from code.visualization.statistics import plot_hill_climber
 from code.visualization.statistics import plot_random
@@ -112,7 +111,7 @@ if __name__ == "__main__":
 
     ### Hill Climber ###
 
-    output_hillclimber = "output/hillclimber_2mod_results.csv"
+    output_hillclimber = "output/hillclimber_results.csv"
 
     # load the railmap
     railmap = Railmap()
