@@ -95,35 +95,97 @@ def modify_solution(current_railmap):
     Returns:
         - New modified Railmap solution
     """
+    # # Create a copy of the current solution
+    # new_railmap = deepcopy(current_railmap)
+
+    # # Select a random route to modify
+    # route_id = random.choice(list(new_railmap.routes.keys()))
+    # route_to_change = new_railmap.routes[route_id]
+
+    # # select random station modification: add or remove a station
+    # modification = random.choice(["add", "remove"])
+    # if modification == "add":
+    #     # Add a neighboring station if possible
+    #     if route_to_change.route:
+    #         current_station = random.choice(route_to_change.route)
+    #         neighbours = current_station.neighbours
+    #         if neighbours:
+    #             new_station, travel_time = random.choice(list(neighbours.items()))
+    #             if route_to_change.is_valid(route_to_change.travel_time + travel_time):
+    #                 route_to_change.add_station(new_station, travel_time)
+    # elif modification == "remove":
+    #     # remove a station from the route if there is more than one station
+    #     if len(route_to_change.route) > 1:
+    #         station_to_remove = random.choice(route_to_change.route)
+    #         route_to_change.route.remove(station_to_remove)
+
+    ### new implementation
+    """
+    Cut route from very common connection and regenerate route from cut point
+    """
     # Create a copy of the current solution
     new_railmap = deepcopy(current_railmap)
 
-    # Select a random route to modify
-    route_id = random.choice(list(new_railmap.routes.keys()))
-    route_to_change = new_railmap.routes[route_id]
+    # keep track of station and connection usage
+    stations_used = {station.id: 0 for station in new_railmap.stations}
+    connections_used = {}
 
-    # select random station modification: add or remove a station
-    modification = random.choice(["add", "remove"])
-    if modification == "add":
-        # Add a neighboring station if possible
-        if route_to_change.route:
-            current_station = random.choice(route_to_change.route)
-            neighbours = current_station.neighbours
-            if neighbours:
-                new_station, travel_time = random.choice(list(neighbours.items()))
-                if route_to_change.is_valid(route_to_change.travel_time + travel_time):
-                    route_to_change.add_station(new_station, travel_time)
-    elif modification == "remove":
-        # remove a station from the route if there is more than one station
-        if len(route_to_change.route) > 1:
-            station_to_remove = random.choice(route_to_change.route)
-            route_to_change.route.remove(station_to_remove)
+    for route in current_railmap.routes.values():
+        for i, station in enumerate(route.route):
+            # count occurance of station
+            stations_used[station.id] += 1
+            # if station is not the last, get connection with next neighbour:
+            if i < (len(route.route) - 1):
+                connection = tuple(sorted(station.id, route.route[i + 1].id))
+                # initialize if not yet present and add occurance
+                connections_used[connection] = connections_used.get(connection, 0) + 1
+    
+    # find most common connection
+    most_common = max(connections_used, key=connections_used.get)
 
+    # get all routes with the common connection present
+    present_routes = []
+    for route_id, route in new_railmap.routes.items():
+        for i in range(len(route.route) - 1):
+            connection = tuple(sorted((station.id, route.route[i + 1].id)))
+            if connection == most_common:
+                present_routes.append((route_id, i))
+
+    # if no route contains the connection, return original railmap
+    if not present_routes:
+        return new_railmap
+
+    # pick a random route and the index of the connection to cut at
+    id_to_modify, cut_idx = random.choice(present_routes)
+    route_to_modify = new_railmap.routes[id_to_modify]
+    
+    # cut the route at the connection
+    new_start_station = route_to_modify.route[cut_idx]
+    route_to_modify.route = route_to_modify.route[:cut_idx + 1]
+
+    # modify travel time for cut route
+    route_to_modify.travel_time = sum(
+        route_to_modify.route[i].neighbours.get(route_to_modify.route[i + 1])
+        for i in range(len(route_to_modify.route) - 1))
+
+    # regenerate route from the cut point
+    current_station = new_start_station
+    while route_to_modify.is_valid(route_to_modify.travel_time): #and current_station:
+        neighbours = current_station.neighbours
+        # retrieve valid (new) neighbours to connect with
+        valid_next_stations = []
+        for station, time in neighbours.items():
+            if route_to_modify.is_valid(route_to_modify.travel_time + time)\
+            and station not in route_to_modify.route:
+                valid_next_stations.append((station, time))
+
+        if not valid_next_stations:
+            break
+        
+        # pick random valid neighbour and continue with route
+        next_station, travel_time = random.choice(valid_next_stations)
+        route_to_modify.add_station(next_station, travel_time)
+        current_station = next_station
+        
     return new_railmap
 
-
-## presentation notes to implement / change:
-#
-#
-#
-#
