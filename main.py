@@ -114,16 +114,20 @@ if __name__ == "__main__":
 
     ### Random Greedy ###
 
+    # creating an output csv file
     output_random_greedy = "output/random_greedy_results.csv"
 
     with open(output_random_greedy, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['quality_score'])
 
+
+    # initializing some values
     iterations_rg = 1000
     num_routes_rg = 7
     max_duration_rg = 120
 
+    # calling the random greedy algorithm for each iteration
     for iteration in range(iterations_rg):
 
         railsystem_rg = Railmap()
