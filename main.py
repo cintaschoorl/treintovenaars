@@ -1,6 +1,7 @@
 from code.classes.railmap import Railmap
 from code.algorithms.randomise import randomise_route
 from code.algorithms.randomise import randomise_heuristics
+from code.algorithms.random_greedy import random_greedy_algorithm
 from code.algorithms.hillclimber import hill_climber
 from  code.classes.route import Route
 from code.visualization.statistics import plot_hill_climber
@@ -86,7 +87,7 @@ if __name__ == "__main__":
     #             max_duration,
     #             first_route
     #         )
-            
+
     #         route = Route(railsystem.stations, max_duration)
     #         route.route = route_stations
     #         #print(route.route)
@@ -108,6 +109,36 @@ if __name__ == "__main__":
     # # make a histogram of the K values in csv file
     # plot_random('output/random_results.csv')
     # plot_random('output/random_heur_results.csv')
+
+
+
+    ### Random Greedy ###
+
+    output_random_greedy = "output/random_greedy_results.csv"
+
+    with open(output_random_greedy, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['quality_score'])
+
+    iterations_rg = 1000
+    num_routes_rg = 7
+    max_duration_rg = 120
+
+    for iteration in range(iterations_rg):
+
+        railsystem_rg = Railmap()
+        railsystem_rg.load_stations(stations_path, uid_path, connections_path)
+
+        quality_score = random_greedy_algorithm(stations_path, uid_path, connections_path, num_routes_rg, max_duration_rg, iterations_rg)
+
+        with open(output_random_greedy, 'a', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow([quality_score])
+
+    print(f"\nRandom Greedy results have been saved to {output_random_greedy}")
+
+
+
 
     ### Hill Climber ###
 
