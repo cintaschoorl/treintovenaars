@@ -1,4 +1,5 @@
 import random
+from collections import Counter
 from copy import deepcopy
 from code.classes.route import Route
 from code.algorithms.randomise import randomise_route
@@ -34,6 +35,7 @@ def hill_climber(railmap, iterations, max_duration, num_routes):
         # Generate a new solution by mutating the current solution
         new_railmap = modify_solution(current_railmap)
         new_score = new_railmap.quality_K()
+        print(f"Iteration {i + 1}: New Score = {new_score}, Current Best Score = {best_score}")
 
         # accept new solution if score is improved
         if new_score > current_score:
@@ -86,12 +88,11 @@ def generate_initial_solution(railmap, n_routes, max_duration):
 def modify_solution(current_railmap):
     """
     Generate a new solution by modifying the current solution.
-    A route with the most common connection is cut at the connection,
-    and the route is regenerated from the cut point.
+    The most common station in the railmap is tracked and cut in a route 
+    where it occurs the most, and regenerated from this point. 
 
     Input: 
         - current_railmap (Railmap): current Railmap object
-        - max_duration (int): maximum duration for each route
 
     Returns:
         - New modified Railmap solution
@@ -99,53 +100,46 @@ def modify_solution(current_railmap):
     # Create a copy of the current solution
     new_railmap = deepcopy(current_railmap)
 
-    # keep track of station and connection usage
-    stations_used = {station.id: 0 for station in new_railmap.stations}
-    connections_used = {}
+    # count station occurences across all routes
+    station_counter = Counter()
+    for route in new_railmap.routes.values():
+        for station in route.route:
+            station_counter[station.id] += 1
 
-    for route in current_railmap.routes.values():
-        for i, station in enumerate(route.route):
-            # count occurance of station
-            stations_used[station.id] += 1
-            # if station is not the last, get connection with next neighbour:
-            if i < (len(route.route) - 1):
-                connection = tuple(sorted(station.id, route.route[i + 1].id))
-                # initialize if not yet present and add occurance
-                connections_used[connection] = connections_used.get(connection, 0) + 1
-    
-    # find most common connection
-    most_common = max(connections_used, key=connections_used.get)
+    # find most common station
+    most_common = max(station_counter, key=station_counter.get)
+    print(f"Most common station: {most_common} ({station_counter[most_common]} times)")
 
-    # get all routes with the common connection present
-    present_routes = []
-    for route_id, route in new_railmap.routes.items():
-        for i in range(len(route.route) - 1):
-            connection = tuple(sorted((station.id, route.route[i + 1].id)))
-            if connection == most_common:
-                present_routes.append((route_id, i))
+    # find route where the station occurs the most
+    route_to_modify = None
+    max_occurrences = 0
+    for route in new_railmap.routes.values():
+        occurrences = sum(1 for station in route.route if station.id == most_common)
+        if occurrences > max_occurrences:
+            route_to_modify = route
+            max_occurrences = occurrences
 
-    # if no route contains the connection, return original railmap
-    if not present_routes:
+    if not route_to_modify:
+        print("No route found to modify.")
+        # pick random route and make random cut and regenerate???
         return new_railmap
 
-    # pick a random route and the index of the connection to cut at
-    id_to_modify, cut_idx = random.choice(present_routes)
-    route_to_modify = new_railmap.routes[id_to_modify]
-    
-    # cut the route at the connection
+    # cut route at the first occurrence of the most common station
+    cut_idx = next(i for i, station in enumerate(route_to_modify.route) if station.id == most_common)
+    print(f"Cutting route at station {most_common} (index {cut_idx})")
     new_start_station = route_to_modify.route[cut_idx]
     route_to_modify.route = route_to_modify.route[:cut_idx + 1]
 
-    # modify travel time for cut route
+    # calculate new travel time of cut route
     route_to_modify.travel_time = sum(
         route_to_modify.route[i].neighbours.get(route_to_modify.route[i + 1])
         for i in range(len(route_to_modify.route) - 1))
 
-    # regenerate route from the cut point
+    # regenerate the route from the cut point
     current_station = new_start_station
-    while route_to_modify.is_valid(route_to_modify.travel_time): #and current_station:
-        neighbours = current_station.neighbours
-        # retrieve valid (new) neighbours to connect with
+    while route_to_modify.is_valid(route_to_modify.travel_time):
+        # retrieve valid neighbours to connect with
+        neighbours = current_station.neighbours      
         valid_next_stations = []
         for station, time in neighbours.items():
             if route_to_modify.is_valid(route_to_modify.travel_time + time)\
@@ -159,6 +153,7 @@ def modify_solution(current_railmap):
         next_station, travel_time = random.choice(valid_next_stations)
         route_to_modify.add_station(next_station, travel_time)
         current_station = next_station
-        
+
     return new_railmap
 
+# LOCAL OPTIMA!!! -> simulated annealing???
