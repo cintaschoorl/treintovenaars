@@ -86,7 +86,8 @@ def generate_initial_solution(railmap, n_routes, max_duration):
 def modify_solution(current_railmap):
     """
     Generate a new solution by modifying the current solution.
-    This simplified version allows adding or removing a station in a route.
+    A route with the most common connection is cut at the connection,
+    and the route is regenerated from the cut point.
 
     Input: 
         - current_railmap (Railmap): current Railmap object
@@ -94,34 +95,6 @@ def modify_solution(current_railmap):
 
     Returns:
         - New modified Railmap solution
-    """
-    # # Create a copy of the current solution
-    # new_railmap = deepcopy(current_railmap)
-
-    # # Select a random route to modify
-    # route_id = random.choice(list(new_railmap.routes.keys()))
-    # route_to_change = new_railmap.routes[route_id]
-
-    # # select random station modification: add or remove a station
-    # modification = random.choice(["add", "remove"])
-    # if modification == "add":
-    #     # Add a neighboring station if possible
-    #     if route_to_change.route:
-    #         current_station = random.choice(route_to_change.route)
-    #         neighbours = current_station.neighbours
-    #         if neighbours:
-    #             new_station, travel_time = random.choice(list(neighbours.items()))
-    #             if route_to_change.is_valid(route_to_change.travel_time + travel_time):
-    #                 route_to_change.add_station(new_station, travel_time)
-    # elif modification == "remove":
-    #     # remove a station from the route if there is more than one station
-    #     if len(route_to_change.route) > 1:
-    #         station_to_remove = random.choice(route_to_change.route)
-    #         route_to_change.route.remove(station_to_remove)
-
-    ### new implementation
-    """
-    Cut route from very common connection and regenerate route from cut point
     """
     # Create a copy of the current solution
     new_railmap = deepcopy(current_railmap)
