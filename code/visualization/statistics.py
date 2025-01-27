@@ -28,10 +28,19 @@ def plot_random(input_file):
 
 
 
-# Visualize Hill Climber
-def plot_hill_climber(csv_file="output/hillclimber_results.csv"):
+# Visualize Hill Climber or Simulated Annealing
+def plot_hillclimb_sim_ann(csv_file="output/hillclimber_results.csv", algorithm='hillclimber'):
+    """
+    Plots the course of the quality function K to the iterations.
+
+    Input:
+        - csv_file (.csv): iterations in the first row and K in the second
+        - algorithm (str): choose which algorithm to plot: 'hillclimber' / 'sim_ann'
+
+    """
     iterations = []
     scores = []
+    temperatures = []
 
     # read CSV file
     with open(csv_file, 'r') as file:
@@ -41,12 +50,21 @@ def plot_hill_climber(csv_file="output/hillclimber_results.csv"):
         for row in reader:
             iterations.append(int(row[0]))
             scores.append(int(row[1]))
+            if algorithm == "sim_ann":
+                temperatures.append(float(row[2]))
 
-    # create plot
+     # create plot
     plt.figure(figsize=(10, 6))
-    plt.plot(iterations, scores, label="Quality Score (K)", color='blue', marker='o')#, linestyle='-')
+    plt.plot(iterations, scores, label="Quality Score (K)", color='blue', marker='o')  # Quality scores
+    
+    if algorithm == 'sim_ann':
+        plt.title("Simulated Annealing: optimization of quality score K")
+        # plot temperatures as a red line
+        plt.plot(iterations, temperatures, label="Temperature", color='red', linestyle='--')
 
-    plt.title("Hill Climber: optimization of quality score K")
+    elif algorithm == 'hillclimber':
+        plt.title("Hill Climber: optimization of quality score K")
+
     plt.xlabel("Iterations")
     plt.ylabel("Quality Score (K)")
     plt.grid(True)
@@ -57,4 +75,4 @@ def plot_hill_climber(csv_file="output/hillclimber_results.csv"):
 
 
 if __name__ == "__main__":
-    plot_hill_climber()
+    plot_hillclimb_sim_ann()

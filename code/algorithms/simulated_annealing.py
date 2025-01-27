@@ -5,7 +5,7 @@ from copy import deepcopy
 from code.classes.route import Route
 from code.algorithms.randomise import randomise_route, randomise_heuristics
 
-def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_temp, cooling_type='linear'):
+def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_temp, cooling_rate=0.9, cooling_type='linear'):
     """
     Simulated Annealing algorithm to optimize the quality score K for a rail network
 
@@ -20,8 +20,9 @@ def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_t
     Returns:
         - tuple: (best Railmap object, its quality score K, list of all scores to visualize)
     """ 
-     # keep track of all scores
+     # keep track of all scores and temperatures
     all_scores = []
+    all_temperatures = []
 
     # generate initial solution with randomise algorithm
     current_railmap = generate_initial_solution(railmap, num_routes, max_duration)
@@ -36,15 +37,16 @@ def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_t
     # simulated annealing loop
     for i in range(iterations):
         # Calculate temperature for iteration
-        temperature = calculate_temp(cooling_type, initial_temp, iterations, i)
+        temperature = calculate_temp(cooling_type, initial_temp, cooling_rate, iterations, i)
+        all_temperatures.append(temperature)
 
         # generate a new solution by mutating the current solution
         new_railmap = modify_solution(current_railmap)
         new_score = new_railmap.quality_K()
 
-        # calculate acceptance probability 
+        # calculate acceptance probability ! met bas zn functie
         if new_score < current_score:
-            acceptance_prob = 2 ** ((current_score - new_score) / temperature) 
+            acceptance_prob = 2 ** (-(current_score - new_score) / temperature)
         else:
             acceptance_prob = 1
         print(f"Acceptance probability = {acceptance_prob}")
@@ -62,32 +64,29 @@ def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_t
         all_scores.append(current_score)
 
         # Debug output
-        print(f"Iteration {i + 1}: New Score = {new_score}, Current Best Score = {best_score}, Temperature = {temperature:.4f}")
+        print(f"#{i + 1}: New Score = {new_score}, Current Best Score = {best_score}, Temperature = {temperature:.4f}")
 
-    return best_railmap, best_score, all_scores
+    return best_railmap, best_score, all_scores, all_temperatures
 
 
-def calculate_temp(cooling_type, startT, iterations, i):
+def calculate_temp(cooling_type, startT, cooling_rate, iterations, i):
     """
     Calculate the new temperature for the given cooling type
 
     Input:
-        - cooling_type (str) = Linear or Exponential cooling function
-        - startT (float) = initial temperature
-        - iterations (int) = maximum number of iterations to improve the solution
-        - i (int) = current iteration
+        - cooling_type (str): linear or exponential cooling function
+        - startT (float): initial temperature
+        - iterations (int): maximum number of iterations to improve the solution
+        - i (int): current iteration
 
     Returns:
         - New temperature (float)
 
-    *Function source: 
-        - Bas Terwijn, 2020, https://www.youtube.com/playlist?list=PLJBtJTYGPSzJaxroYW-6OH1NRuUFqpGER
-    
     """
     if cooling_type == "linear":
         return startT - (startT/iterations) * i
     elif cooling_type == "exponential":
-        return startT * 0.997 ** i
+        return startT * cooling_rate ** i
 
 
 def generate_initial_solution(railmap, n_routes, max_duration):
@@ -143,7 +142,7 @@ def modify_solution(current_railmap):
 
     # find most common station
     most_common = max(station_counter, key=station_counter.get)
-    print(f"Most common station: {most_common} ({station_counter[most_common]} times)")
+    # print(f"Most common station: {most_common} ({station_counter[most_common]} times)")
 
     # find route where the station occurs the most
     route_to_modify = None
@@ -161,7 +160,7 @@ def modify_solution(current_railmap):
 
     # cut route at the first occurrence of the most common station
     cut_idx = next(i for i, station in enumerate(route_to_modify.route) if station.id == most_common)
-    print(f"Cutting route at station {most_common} (index {cut_idx})")
+    # print(f"Cutting route at station {most_common} (index {cut_idx})")
     new_start_station = route_to_modify.route[cut_idx]
     route_to_modify.route = route_to_modify.route[:cut_idx + 1]
 
@@ -190,5 +189,3 @@ def modify_solution(current_railmap):
         current_station = next_station
 
     return new_railmap
-
-# LOCAL OPTIMA!!! -> simulated annealing???
