@@ -49,7 +49,6 @@ def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_t
             acceptance_prob = 1
         print(f"Acceptance probability = {acceptance_prob}")
 
-
         # accept new solution based on probability
         if new_score > current_score or random.random() < acceptance_prob:
             current_railmap = deepcopy(new_railmap)

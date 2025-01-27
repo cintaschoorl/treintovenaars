@@ -126,9 +126,9 @@ if __name__ == "__main__":
 
 
     # initializing some values
-    iterations_rg = 1000
+    iterations_rg = 10000
     num_routes_rg = 20
-    max_duration_rg = 360
+    max_duration_rg = 180
 
     # calling the random greedy algorithm for each iteration
     for iteration in range(iterations_rg):
@@ -136,7 +136,7 @@ if __name__ == "__main__":
         railsystem_rg = Railmap()
         railsystem_rg.load_stations(stations_NL_path, uid_path_NL, connections_NL_path)
 
-        quality_score = random_greedy_algorithm(stations_path_NL, uid_path_NL, connections_NL_path, num_routes_rg, max_duration_rg, iterations_rg)
+        quality_score = random_greedy_algorithm(stations_NL_path, uid_path_NL, connections_NL_path, num_routes_rg, max_duration_rg, iterations_rg)
 
         with open(output_random_greedy, 'a', newline='') as csvfile:
             writer = csv.writer(csvfile)
@@ -153,7 +153,7 @@ if __name__ == "__main__":
 
     # load the railmap
     railmap = Railmap()
-    railmap.load_stations(stations_path, uid_path, connections_path)
+    railmap.load_stations(stations_NL_path, uid_path_NL, connections_NL_path)
 
     # parameters
     iterations = 1000
