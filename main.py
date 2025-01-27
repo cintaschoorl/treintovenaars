@@ -12,9 +12,12 @@ import os
 
 if __name__ == "__main__":
     # create paths to csv data
-    stations_path = "data/StationsHolland.csv"
-    connections_path = "data/ConnectiesHolland.csv"
-    uid_path = "data/uid.csv"
+    stations_Holland_path = "data/StationsHolland.csv"
+    stations_NL_path = "data/StationsNationaal.csv"
+    connections_Holland_path = "data/ConnectiesHolland.csv"
+    connections_NL_path = "data/ConnectiesNationaal.csv"
+    uid_path_Holland = "data/uid_Holland.csv"
+    uid_path_NL = "data/uid_NL.csv"
 
     output_dir = 'output'
     if not os.path.exists(output_dir):
@@ -124,16 +127,16 @@ if __name__ == "__main__":
 
     # initializing some values
     iterations_rg = 1000
-    num_routes_rg = 7
-    max_duration_rg = 120
+    num_routes_rg = 20
+    max_duration_rg = 360
 
     # calling the random greedy algorithm for each iteration
     for iteration in range(iterations_rg):
 
         railsystem_rg = Railmap()
-        railsystem_rg.load_stations(stations_path, uid_path, connections_path)
+        railsystem_rg.load_stations(stations_NL_path, uid_path_NL, connections_NL_path)
 
-        quality_score = random_greedy_algorithm(stations_path, uid_path, connections_path, num_routes_rg, max_duration_rg, iterations_rg)
+        quality_score = random_greedy_algorithm(stations_path_NL, uid_path_NL, connections_NL_path, num_routes_rg, max_duration_rg, iterations_rg)
 
         with open(output_random_greedy, 'a', newline='') as csvfile:
             writer = csv.writer(csvfile)
