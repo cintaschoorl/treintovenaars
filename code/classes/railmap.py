@@ -62,6 +62,7 @@ class Railmap():
     def quality_K(self):
         # compute total connections
         total_connections = 0
+
         for station in self.stations:
             total_connections += len(station.neighbours)
 
@@ -82,6 +83,7 @@ class Railmap():
 
             # Sum the travel time of the route
             total_time += route.total_travel_time()
+
 
         #Compute fraction p of used connections
         p =  len(ridden_connections) / total_connections

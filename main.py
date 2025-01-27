@@ -6,9 +6,9 @@ from code.algorithms.hillclimber import hill_climber
 from  code.classes.route import Route
 from code.visualization.statistics import plot_hill_climber
 from code.visualization.statistics import plot_random
+from code.algorithms.grid_search import grid_search
 import csv
 import os
-
 
 if __name__ == "__main__":
     # create paths to csv data
@@ -22,93 +22,93 @@ if __name__ == "__main__":
 
     # ### Random ###
 
-    # output_random = "output/random_results.csv"
+    output_random = "output/random_results.csv"
 
-    # # Create CSV header
-    # with open(output_random, 'w', newline='') as csvfile:
-    #     writer = csv.writer(csvfile)
-    #     writer.writerow(['quality_score'])
+    # Create CSV header
+    with open(output_random, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['quality_score'])
 
-    # # het random algoritme 10000 keer laten runnen
-    # for iteration in range(10000):
-    #     railsystem = Railmap()
+    # het random algoritme 10000 keer laten runnen
+    for iteration in range(10000):
+        railsystem = Railmap()
 
-    #     # load the csv files to get all stations and connections
-    #     railsystem.load_stations(stations_path, uid_path, connections_path)
+        # load the csv files to get all stations and connections
+        railsystem.load_stations(stations_path, uid_path, connections_path)
 
-    #     number_routes = 7
-    #     max_duration = 120
+        number_routes = 7
+        max_duration = 120
 
-    #     for i in range(number_routes):
-    #         route_stations, total_time = randomise_route(railsystem.stations, max_duration)
+        for i in range(number_routes):
+            route_stations, total_time = randomise_route(railsystem.stations, max_duration)
 
-    #         route = Route(railsystem.stations, max_duration)
-    #         route.route = route_stations
-    #         #print(route.route)
-    #         route.travel_time = total_time
-    #         route.id = f"train_{i + 1}"
+            route = Route(railsystem.stations, max_duration)
+            route.route = route_stations
+            #print(route.route)
+            route.travel_time = total_time
+            route.id = f"train_{i + 1}"
 
-    #         railsystem.add_trajectory(route)
+            railsystem.add_trajectory(route)
 
-    #     K = railsystem.quality_K()
-    #         #print(f"\n quality score: {K}")
+        K = railsystem.quality_K()
+            #print(f"\n quality score: {K}")
 
-    #         # Write result to CSV
-    #     with open(output_random, 'a', newline='') as csvfile:
-    #         writer = csv.writer(csvfile)
-    #         writer.writerow([K])
+            # Write result to CSV
+        with open(output_random, 'a', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow([K])
 
-    # print(f"\nRandom results have been saved to {output_random}")
+    print(f"\nRandom results have been saved to {output_random}")
 
 
-    # output_random_heur = "output/random_heur_results.csv"
+    output_random_heur = "output/random_heur_results.csv"
 
-    # # Create CSV header
-    # with open(output_random_heur, 'w', newline='') as csvfile:
-    #         writer = csv.writer(csvfile)
-    #         writer.writerow(['quality_score'])
+    # Create CSV header
+    with open(output_random_heur, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(['quality_score'])
 
-    # # het random algoritme met heuristieken 10000 keer laten runnen
-    # for iteration in range(10000):
-    #     railsystem = Railmap()
+    # het random algoritme met heuristieken 10000 keer laten runnen
+    for iteration in range(10000):
+        railsystem = Railmap()
 
-    #     # load the csv files to get all stations and connections
-    #     railsystem.load_stations(stations_path, uid_path, connections_path)
+        # load the csv files to get all stations and connections
+        railsystem.load_stations(stations_path, uid_path, connections_path)
 
-    #     number_routes = 7
-    #     max_duration = 120
+        number_routes = 7
+        max_duration = 120
 
-    #     for i in range(number_routes):
-    #          # geef aan dat dit de eerste route is van een nieuwe lijnvoering
-    #         first_route = (i == 0)
+        for i in range(number_routes):
+             # geef aan dat dit de eerste route is van een nieuwe lijnvoering
+            first_route = (i == 0)
 
-    #         route_stations, total_time = randomise_heuristics(
-    #             railsystem.stations,
-    #             max_duration,
-    #             first_route
-    #         )
+            route_stations, total_time = randomise_heuristics(
+                railsystem.stations,
+                max_duration,
+                first_route
+            )
 
-    #         route = Route(railsystem.stations, max_duration)
-    #         route.route = route_stations
-    #         #print(route.route)
-    #         route.travel_time = total_time
-    #         route.id = f"train_{i + 1}"
+            route = Route(railsystem.stations, max_duration)
+            route.route = route_stations
+            #print(route.route)
+            route.travel_time = total_time
+            route.id = f"train_{i + 1}"
 
-    #         railsystem.add_trajectory(route)
+            railsystem.add_trajectory(route)
 
-    #     K = railsystem.quality_K()
-    #         #print(f"\n quality score: {K}")
+        K = railsystem.quality_K()
+            #print(f"\n quality score: {K}")
 
-    #             # Write result to CSV
-    #     with open(output_random_heur, 'a', newline='') as csvfile:
-    #         writer = csv.writer(csvfile)
-    #         writer.writerow([K])
+                # Write result to CSV
+        with open(output_random_heur, 'a', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow([K])
 
-    # print(f"\nRandom with heuristics results have been saved to {output_random_heur}")
+    print(f"\nRandom with heuristics results have been saved to {output_random_heur}")
 
-    # # make a histogram of the K values in csv file
-    # plot_random('output/random_results.csv')
-    # plot_random('output/random_heur_results.csv')
+    # make a histogram of the K values in csv file
+    plot_random('output/random_results.csv')
+    plot_random('output/random_heur_results.csv')
 
 
 
@@ -179,3 +179,28 @@ if __name__ == "__main__":
     print(f"Hill Climber results have been saved to {output_hillclimber}")
 
     plot_hill_climber()
+
+
+
+
+
+
+  # Run grid search for each algorithm
+    algorithms = ["hillclimber", "random_heuristic", "random_greedy"]
+
+    for algorithm in algorithms:
+        print(f"\n{'='*50}")
+        print(f"Running grid search for {algorithm}")
+        print(f"{'='*50}\n")
+
+        best_params, best_score = grid_search(
+            stations_path,
+            uid_path,
+            connections_path,
+            algorithm=algorithm,
+            total_time=10  # 1 hour per algorithm
+        )
+
+        print(f"\nFinal results for {algorithm}:")
+        print(f"Best parameters: {best_params}")
+        print(f"Best score: {best_score}")
