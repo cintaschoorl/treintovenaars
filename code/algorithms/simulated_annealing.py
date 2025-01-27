@@ -1,23 +1,26 @@
 import random
+import math
 from collections import Counter
 from copy import deepcopy
 from code.classes.route import Route
 from code.algorithms.randomise import randomise_route, randomise_heuristics
 
-def hill_climber(railmap, iterations, max_duration, num_routes):
+def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_temp, cooling_type='linear'):
     """
-    Hill Climber algorithm to optimize the quality score K for a rail network
+    Simulated Annealing algorithm to optimize the quality score K for a rail network
 
     Input:
         - railmap (Railmap): Railmap object containing all stations and connections
         - iterations (int): maximum number of iterations to improve the solution
         - max_duration (int): maximum duration for each route
         - num_routes (int): number of routes to generate in a solution
+        - initial_temp (float): initial temperature for simulated annealing
+        - cooling_type (str): 
 
     Returns:
-        - tuple: (best Railmap object, its quality score K, list of scores to visualize)
-    """
-    # keep track of all scores
+        - tuple: (best Railmap object, its quality score K, list of all scores to visualize)
+    """ 
+     # keep track of all scores
     all_scores = []
 
     # generate initial solution with randomise algorithm
@@ -28,21 +31,30 @@ def hill_climber(railmap, iterations, max_duration, num_routes):
     best_railmap = deepcopy(current_railmap)
     best_score = current_score
 
-    #print(f"Initial Quality Score (K): {current_score}")
+    print(f"Initial Quality Score (K): {current_score}")
 
-    # iteratively improve solution
+    # simulated annealing loop
     for i in range(iterations):
+        # Calculate temperature for iteration
+        temperature = calculate_temp(cooling_type, initial_temp, iterations, i)
+
         # generate a new solution by mutating the current solution
         new_railmap = modify_solution(current_railmap)
         new_score = new_railmap.quality_K()
-        #print(f"Iteration {i + 1}: New Score = {new_score}, Current Best Score = {best_score}")
 
-        # accept new solution if score is improved
-        if new_score > current_score:
+        # calculate acceptance probability 
+        if new_score < current_score:
+            acceptance_prob = 2 ** ((current_score - new_score) / temperature) 
+        else:
+            acceptance_prob = 1
+        print(f"Acceptance probability = {acceptance_prob}")
+
+        # accept new solution based on probability
+        if new_score > current_score or random.random() < acceptance_prob:
             current_railmap = deepcopy(new_railmap)
             current_score = new_score
 
-            # update new best solution
+            # Update new best solution
             if new_score > best_score:
                 best_railmap = deepcopy(new_railmap)
                 best_score = new_score
@@ -50,15 +62,38 @@ def hill_climber(railmap, iterations, max_duration, num_routes):
         all_scores.append(current_score)
 
         # Debug output
-        # print(f"Iteration {i + 1}: Current Score = {current_score}, Best Score = {best_score}")
+        print(f"Iteration {i + 1}: New Score = {new_score}, Current Best Score = {best_score}, Temperature = {temperature:.4f}")
 
     return best_railmap, best_score, all_scores
+
+
+def calculate_temp(cooling_type, startT, iterations, i):
+    """
+    Calculate the new temperature for the given cooling type
+
+    Input:
+        - cooling_type (str) = Linear or Exponential cooling function
+        - startT (float) = initial temperature
+        - iterations (int) = maximum number of iterations to improve the solution
+        - i (int) = current iteration
+
+    Returns:
+        - New temperature (float)
+
+    *Function source: 
+        - Bas Terwijn, 2020, https://www.youtube.com/playlist?list=PLJBtJTYGPSzJaxroYW-6OH1NRuUFqpGER
+    
+    """
+    if cooling_type == "linear":
+        return startT - (startT/iterations) * i
+    elif cooling_type == "exponential":
+        return startT * 0.997 ** i
 
 
 def generate_initial_solution(railmap, n_routes, max_duration):
     """
     Generate an initial railmap solution using the randomise algorithm.
-
+    
     Input:
         - railmap (Railmap): Railmap object with stations and connections
         - n_routes (int): number of routes to generate
@@ -88,10 +123,10 @@ def generate_initial_solution(railmap, n_routes, max_duration):
 def modify_solution(current_railmap):
     """
     Generate a new solution by modifying the current solution.
-    The most common station in the railmap is tracked and cut in a route
-    where it occurs the most, and regenerated from this point.
+    The most common station in the railmap is tracked and cut in a route 
+    where it occurs the most, and regenerated from this point. 
 
-    Input:
+    Input: 
         - current_railmap (Railmap): current Railmap object
 
     Returns:
@@ -108,7 +143,7 @@ def modify_solution(current_railmap):
 
     # find most common station
     most_common = max(station_counter, key=station_counter.get)
-    #print(f"Most common station: {most_common} ({station_counter[most_common]} times)")
+    print(f"Most common station: {most_common} ({station_counter[most_common]} times)")
 
     # find route where the station occurs the most
     route_to_modify = None
@@ -120,13 +155,13 @@ def modify_solution(current_railmap):
             max_occurrences = occurrences
 
     if not route_to_modify:
-        #print("No route found to modify.")
+        print("No route found to modify.")
         # pick random route and make random cut and regenerate???
         return new_railmap
 
     # cut route at the first occurrence of the most common station
     cut_idx = next(i for i, station in enumerate(route_to_modify.route) if station.id == most_common)
-    #print(f"Cutting route at station {most_common} (index {cut_idx})")
+    print(f"Cutting route at station {most_common} (index {cut_idx})")
     new_start_station = route_to_modify.route[cut_idx]
     route_to_modify.route = route_to_modify.route[:cut_idx + 1]
 
@@ -139,7 +174,7 @@ def modify_solution(current_railmap):
     current_station = new_start_station
     while route_to_modify.is_valid(route_to_modify.travel_time):
         # retrieve valid neighbours to connect with
-        neighbours = current_station.neighbours
+        neighbours = current_station.neighbours      
         valid_next_stations = []
         for station, time in neighbours.items():
             if route_to_modify.is_valid(route_to_modify.travel_time + time)\
@@ -148,7 +183,7 @@ def modify_solution(current_railmap):
 
         if not valid_next_stations:
             break
-
+        
         # pick random valid neighbour and continue with route
         next_station, travel_time = random.choice(valid_next_stations)
         route_to_modify.add_station(next_station, travel_time)
