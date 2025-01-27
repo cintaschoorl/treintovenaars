@@ -39,7 +39,7 @@ def load_stations(filepath):
         for row in reader:
             name, y, x = row
 
-            # filling the stations list with the name, x and y for each station
+            # de stations lijst vullen met de name, x and y voor ieder station
             stations.append(Station(name, float(y), float(x)))
 
     return stations
@@ -59,7 +59,7 @@ def load_connections(filepath):
         for row in reader:
             station1, station2, travel_time = row
 
-            # filling the connections list
+            # de connections lijst vullen
             connections.append(Connection(station1, station2, int(travel_time)))
     return connections
 
@@ -130,9 +130,9 @@ if __name__ == "__main__":
         ) +
         theme_minimal() +
         theme(
-            axis_text_x=element_blank(),  # Remove x-axis labels
-            axis_text_y=element_blank(),  # Remove y-axis labels
-            axis_ticks=element_blank()    # Remove axis ticks
+            axis_text_x=element_blank(),
+            axis_text_y=element_blank(),
+            axis_ticks=element_blank()
         )
     )
 
