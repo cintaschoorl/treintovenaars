@@ -1,6 +1,8 @@
 from code.classes.railmap import Railmap
 from code.algorithms.randomise import randomise_route
+from code.algorithms.randomise import run_randomise_route
 from code.algorithms.randomise import randomise_heuristics
+from code.algorithms.randomise import run_randomise_heuristics
 from code.algorithms.random_greedy import random_greedy_algorithm
 from code.algorithms.hillclimber import hill_climber
 from  code.classes.route import Route
@@ -23,96 +25,19 @@ if __name__ == "__main__":
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    # ### Random ###
+    # ### Random algorithms ###
 
-    output_random = "output/random_results.csv"
+    # Run random algorithm
+    output_random = "output/random_results_Holland.csv"
+    run_randomise_route(stations_Holland_path, uid_path_Holland, connections_Holland_path, output_random)
 
-    # Create CSV header
-    with open(output_random, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(['quality_score'])
-
-    # het random algoritme 10000 keer laten runnen
-    for iteration in range(10000):
-        railsystem = Railmap()
-
-        # load the csv files to get all stations and connections
-        railsystem.load_stations(stations_path, uid_path, connections_path)
-
-        number_routes = 7
-        max_duration = 120
-
-        for i in range(number_routes):
-            route_stations, total_time = randomise_route(railsystem.stations, max_duration)
-
-            route = Route(railsystem.stations, max_duration)
-            route.route = route_stations
-            #print(route.route)
-            route.travel_time = total_time
-            route.id = f"train_{i + 1}"
-
-            railsystem.add_trajectory(route)
-
-        K = railsystem.quality_K()
-            #print(f"\n quality score: {K}")
-
-            # Write result to CSV
-        with open(output_random, 'a', newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow([K])
-
-    print(f"\nRandom results have been saved to {output_random}")
-
-
-    output_random_heur = "output/random_heur_results.csv"
-
-    # Create CSV header
-    with open(output_random_heur, 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(['quality_score'])
-
-    # het random algoritme met heuristieken 10000 keer laten runnen
-    for iteration in range(10000):
-        railsystem = Railmap()
-
-        # load the csv files to get all stations and connections
-        railsystem.load_stations(stations_path, uid_path, connections_path)
-
-        number_routes = 7
-        max_duration = 120
-
-        for i in range(number_routes):
-             # geef aan dat dit de eerste route is van een nieuwe lijnvoering
-            first_route = (i == 0)
-
-            route_stations, total_time = randomise_heuristics(
-                railsystem.stations,
-                max_duration,
-                first_route
-            )
-
-            route = Route(railsystem.stations, max_duration)
-            route.route = route_stations
-            #print(route.route)
-            route.travel_time = total_time
-            route.id = f"train_{i + 1}"
-
-            railsystem.add_trajectory(route)
-
-        K = railsystem.quality_K()
-            #print(f"\n quality score: {K}")
-
-                # Write result to CSV
-        with open(output_random_heur, 'a', newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow([K])
-
-    print(f"\nRandom with heuristics results have been saved to {output_random_heur}")
+    # Run random heuristic algorithm
+    output_random_heur = "output/random_heur_results_Holland.csv"
+    run_randomise_heuristics(stations_Holland_path, uid_path_Holland, connections_Holland_path, output_random_heur)
 
     # make a histogram of the K values in csv file
-    plot_random('output/random_results.csv')
-    plot_random('output/random_heur_results.csv')
-
+    plot_random('output/random_results_Holland.csv')
+    plot_random('output/random_heur_results_Holland.csv')
 
 
     ### Random Greedy ###
