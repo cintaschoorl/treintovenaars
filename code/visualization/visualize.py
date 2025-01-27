@@ -4,6 +4,7 @@ from plotnine import element_blank
 from plotnine import ggplot, aes, geom_point, geom_text, geom_segment, labs, theme_minimal, theme
 import os
 
+
 class Station:
     """
     Initializing the stations with their coördinates
@@ -63,12 +64,15 @@ def load_connections(filepath):
     return connections
 
 
+
 if __name__ == "__main__":
 
     # in de juiste mappen de juiste data vinden als input voor de functies die deze inladen
     script_dir = os.path.dirname(os.path.abspath(__file__))
     stations_path = os.path.join(script_dir, "../../data/StationsHolland.csv")
     connections_path = os.path.join(script_dir, "../../data/ConnectiesHolland.csv")
+
+    # een output pad creëren
     output_dir = os.path.join(script_dir, "output")
     output_path = os.path.join(output_dir, "train_routes_plot.png")
 
@@ -81,18 +85,6 @@ if __name__ == "__main__":
 
     stations.sort(key=lambda station: station.y)
 
-    # Set constant values for left and right side
-    left_x = -50  # Left side
-    right_x = 50  # Right side
-
-    # Split the stations into left and right based on their y-values
-    for i, station in enumerate(stations):
-        if i % 2 == 0:
-            station.x = left_x  # Assign the left x-coordinate to every other station
-        else:
-            station.x = right_x  # Assign the right x-coordinate to the rest
-
-    # Prepare connections data
     connections_data = []
     stations_dict = {station.name: station for station in stations}
 
@@ -111,7 +103,7 @@ if __name__ == "__main__":
 
     connections_df = pd.DataFrame(connections_data)
 
-    # Create and save the plot
+    # de plot aanmaken en opslaan
     plot = (
         ggplot(connections_df) +
         geom_segment(
@@ -144,126 +136,6 @@ if __name__ == "__main__":
         )
     )
 
-
-    # left_x = -50  # Constant value for left side
-    # right_x = 50  # Constant value for right side
-    #
-    # # Sort stations by y-coordinate to spread them out vertically
-    # stations.sort(key=lambda station: station.y)
-    #
-    # left_stations = stations[:len(stations)//2]  # First half on the left
-    # right_stations = stations[len(stations)//2:]  # Second half on the right
-    #
-    # # Assign x-coordinates to stations (left and right)
-    # for i, station in enumerate(left_stations):
-    #     station.x = left_x
-    # for i, station in enumerate(right_stations):
-    #     station.x = right_x
-    #
-    # # Prepare connections data
-    # connections_data = []
-    # stations_dict = {station.name: station for station in stations}
-    #
-    # for connection in connections:
-    #     station1 = stations_dict[connection.station1]
-    #     station2 = stations_dict[connection.station2]
-    #     connections_data.append({
-    #         "from_station": station1.name,
-    #         "to_station": station2.name,
-    #         "from_x": station1.x,
-    #         "from_y": station1.y,
-    #         "to_x": station2.x,
-    #         "to_y": station2.y,
-    #         "travel_time": connection.travel_time
-    #     })
-    #
-    # connections_df = pd.DataFrame(connections_data)
-    #
-    # # Create and save the plot
-    # plot = (
-    #     ggplot(connections_df) +
-    #     geom_segment(
-    #         aes(x='from_x', y='from_y', xend='to_x', yend='to_y', color='travel_time'),
-    #         size=1,
-    #         alpha=0.8
-    #     ) +
-    #     geom_point(
-    #         aes(x='from_x', y='from_y'),
-    #         size=4,
-    #         color='blue'
-    #     ) +
-    #     geom_text(
-    #         aes(x='from_x', y='from_y', label='from_station'),
-    #         nudge_y=0.02,
-    #         size=8,
-    #         ha="center"
-    #     ) +
-    #     labs(
-    #         title="Train Route Connections",
-    #         x="Longitude",
-    #         y="Latitude",
-    #         color="Travel Time (min)"
-    #     ) +
-    #     theme_minimal()
-    # )
-    #
-
-
-
-
-
-
-
-    #
-    #
-    # connections_data = []
-    # stations_dict = {station.name: station for station in stations}
-    #
-    # for connection in connections:
-    #     station1 = stations_dict[connection.station1]
-    #     station2 = stations_dict[connection.station2]
-    #     connections_data.append({
-    #         "from_station": station1.name,
-    #         "to_station": station2.name,
-    #         "from_x": station1.x,
-    #         "from_y": station1.y,
-    #         "to_x": station2.x,
-    #         "to_y": station2.y,
-    #         "travel_time": connection.travel_time
-    #     })
-    #
-    #
-    #
-    #
-    # connections_df = pd.DataFrame(connections_data)
-    #
-    #
-    # plot = (
-    #     ggplot(connections_df) +
-    #     geom_segment(
-    #         aes(x='from_x', y='from_y', xend='to_x', yend='to_y', color='travel_time'),
-    #         size=1,
-    #         alpha=0.8
-    #     ) +
-    #     geom_point(
-    #         aes(x='from_x', y='from_y'),
-    #         size=4,
-    #         color='blue'
-    #     ) +
-    #     geom_text(
-    #         aes(x='from_x', y='from_y', label='from_station'),
-    #         nudge_y=0.02,
-    #         size=8,
-    #         ha="center"
-    #     ) +
-    #     labs(
-    #         title="Train Route Connections",
-    #         x="Longitude",
-    #         y="Latitude",
-    #         color="Travel Time (min)"
-    #     ) +
-    #     theme_minimal()
-    # )
 
     plot.save(output_path)
     print(f"Plot saved to {output_path}")
