@@ -181,7 +181,7 @@ if __name__ == "__main__":
     railmap.load_stations(stations_NL_path, uid_path_NL, connections_NL_path)
 
     # parameters
-    iterations = 1000
+    iterations = 50
     num_routes = 4
     max_duration = 120
 
