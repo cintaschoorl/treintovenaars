@@ -22,7 +22,6 @@ def randomise_route(stations_list, max_duration=120):
     route.add_station(current_station)
 
     while spent_time <= max_duration:
-
         # get current neighbours
         neighbours = route.get_neighbours(current_station)
 
@@ -68,7 +67,7 @@ def run_randomise_route(stations_path, uid_path, connections_path, output_file, 
         railsystem = Railmap()
         railsystem.load_stations(stations_path, uid_path, connections_path)
 
-        number_routes = number_routes
+        number_routes = num_routes
         max_duration = max_duration
 
         for i in range(number_routes):
@@ -199,7 +198,7 @@ def run_randomise_heuristics(stations_path, uid_path, connections_path, output_f
         railsystem = Railmap()
         railsystem.load_stations(stations_path, uid_path, connections_path)
 
-        number_routes = number_routes
+        number_routes = num_routes
         max_duration = max_duration
 
         for i in range(number_routes):

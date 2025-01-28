@@ -27,17 +27,27 @@ if __name__ == "__main__":
 
     # ### Random algorithms ###
 
-    # Run random algorithm
+    # Run random algorithm Holland
     output_random = "output/random_results_Holland.csv"
     run_randomise_route(stations_Holland_path, uid_path_Holland, connections_Holland_path, output_random)
+
+    # Run random algorithm on NL
+    output_random_NL = "output/random_results_NL.csv"
+    run_randomise_route(stations_NL_path, uid_path_NL, connections_NL_path, output_random_NL, num_routes=20, max_duration=180)
 
     # Run random heuristic algorithm
     output_random_heur = "output/random_heur_results_Holland.csv"
     run_randomise_heuristics(stations_Holland_path, uid_path_Holland, connections_Holland_path, output_random_heur)
 
+    # Run random heuristic algorithm
+    output_random_heur_NL = "output/random_heur_results_NL.csv"
+    run_randomise_heuristics(stations_NL_path, uid_path_NL, connections_NL_path, output_random_heur_NL, num_routes=20, max_duration=180)
+
     # make a histogram of the K values in csv file
     plot_random(output_random)
+    plot_random(output_random_NL)
     plot_random(output_random_heur)
+    plot_random(output_random_heur_NL)
 
 
     ### Random Greedy ###
