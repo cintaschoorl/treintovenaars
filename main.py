@@ -25,6 +25,8 @@ if __name__ == "__main__":
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
+
+
     # ### Random algorithms ###
 
     # Run random algorithm
@@ -63,40 +65,6 @@ if __name__ == "__main__":
 
 
 
-
-
-
-
-    # creating an output csv file
-    # output_random_greedy = "output/random_greedy_results.csv"
-    #
-    # with open(output_random_greedy, 'w', newline='') as csvfile:
-    #     writer = csv.writer(csvfile)
-    #     writer.writerow(['quality_score'])
-    #
-    #
-    # # initializing some values
-    # iterations_rg = 10000
-    # num_routes_rg = 20
-    # max_duration_rg = 180
-    #
-    # # calling the random greedy algorithm for each iteration
-    # for iteration in range(iterations_rg):
-    #
-    #     railsystem_rg = Railmap()
-    #     railsystem_rg.load_stations(stations_NL_path, uid_path_NL, connections_NL_path)
-    #
-    #     quality_score = random_greedy_algorithm(stations_NL_path, uid_path_NL, connections_NL_path, num_routes_rg, max_duration_rg, iterations_rg)
-    #
-    #     with open(output_random_greedy, 'a', newline='') as csvfile:
-    #         writer = csv.writer(csvfile)
-    #         writer.writerow([quality_score])
-    #
-    # print(f"\nRandom Greedy results have been saved to {output_random_greedy}")
-    #
-
-
-
     ### Hill Climber ###
 
     output_hillclimber = "output/hillclimber_results.csv"
@@ -132,7 +100,6 @@ if __name__ == "__main__":
     print(f"Hill Climber results have been saved to {output_hillclimber}")
 
     plot_hill_climber()
-
 
 
 
