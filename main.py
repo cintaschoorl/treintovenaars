@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     ### Random Greedy ###
 
-    # # initializing some values
+    # initializing some values
     iterations_rg = 10000
     num_routes_rg = 20
     max_duration_rg = 180
@@ -53,12 +53,11 @@ if __name__ == "__main__":
 
     output_random_greedy = "output/random_greedy_results.csv"
 
-    # Writing headers in the CSV file before the algorithm runs
     with open(output_random_greedy, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['iteration', 'quality_score'])
 
-    # Running the algorithm and writing results for each iteration
+    # running the algorithm and writing results in a csv file for each iteration
     quality_score = random_greedy_algorithm(stations_NL_path, uid_path_NL, connections_NL_path, num_routes_rg, max_duration_rg, iterations_rg, output_random_greedy)
 
     print(f"\nRandom Greedy results have been saved to {output_random_greedy}")
