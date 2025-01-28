@@ -45,9 +45,9 @@ def plot_random_greedy(input_file):
     mean = df['quality_score'].mean()
     std = df['quality_score'].std()
     plt.axvline(mean, color='red', linestyle='dashed', linewidth=1)
-    plt.text(mean * 1.05, plt.ylim()[1] * 0.9, f'Mean: {mean:.2f}\nStd: {std:.2f}', color='red')
+    plt.text(mean * 1.05, plt.ylim()[1] * 0.9, f'Mean: {mean:.2f}\nStd: {std:.2f}', color='black')
 
-    # Plotting 
+    # Plotting
     plt.savefig('output/quality_scores_histogram.png')
     plt.show()
 
