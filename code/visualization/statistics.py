@@ -27,6 +27,35 @@ def plot_random(input_file):
     plt.show()
 
 
+# visualize random greedy
+def plot_random_greedy(input_file):
+    """
+    Visualizing the distribution of quality scores from the random greedy algorithm.
+    """
+    df = pd.read_csv(input_file)
+
+    # Creating the histogram
+    plt.figure(figsize=(10, 6))
+    plt.hist(df['quality_score'], bins=20, edgecolor='black', alpha=0.75)
+    plt.title('Distribution of Quality Scores for Random Greedy Algorithm')
+    plt.xlabel('Quality Score (K)')
+    plt.ylabel('Frequency')
+
+    # Adding the mean and the standard deviation values to the plot
+    mean = df['quality_score'].mean()
+    std = df['quality_score'].std()
+    plt.axvline(mean, color='red', linestyle='dashed', linewidth=1)
+    plt.text(mean * 1.05, plt.ylim()[1] * 0.9, f'Mean: {mean:.2f}\nStd: {std:.2f}', color='black')
+
+    # Plotting
+    file_name = os.path.basename(input_file).replace(".csv", "")
+    plt.savefig(f'output/quality_scores_histogram_{file_name}.png')
+    plt.show()
+
+
+
+
+
 
 # Visualize Hill Climber or Simulated Annealing
 def plot_hillclimb_sim_ann(csv_file="output/hillclimber_results.csv", algorithm='hillclimber'):
@@ -56,7 +85,7 @@ def plot_hillclimb_sim_ann(csv_file="output/hillclimber_results.csv", algorithm=
      # create plot
     plt.figure(figsize=(10, 6))
     plt.plot(iterations, scores, label="Quality Score (K)", color='blue', marker='o')  # Quality scores
-    
+
     if algorithm == 'sim_ann':
         plt.title("Simulated Annealing: optimization of quality score K")
         # plot temperatures as a red line

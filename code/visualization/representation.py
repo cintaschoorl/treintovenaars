@@ -136,7 +136,7 @@ if __name__ == "__main__":
 
 
     def update(frame):
-        
+
 
         # de titels en de assen definiëren
         ax.set_title("Stations and connections with their coordinates", fontsize=16)
@@ -164,33 +164,3 @@ if __name__ == "__main__":
 
     plt.tight_layout()
     plt.show()
-
-
-
-    #
-    # nx.draw_networkx_nodes(
-    #     G,
-    #     pos,
-    #     node_size=300,
-    #     node_color="lightblue",
-    #     edgecolors="black",
-    # )
-    # nx.draw_networkx_labels(G, pos, font_size=4, font_color="black")
-    # nx.draw_networkx_edges(
-    #     G,
-    #     pos,
-    #     edge_color="gray",
-    #     arrows = False
-    # )
-    #
-    # # Toon gewichten op randen
-    # edge_labels = nx.get_edge_attributes(G, "weight")
-    # nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=7)
-    #
-    # # Titel en assen
-    # ax.set_title("Stations en verbindingen met geografische coördinaten", fontsize=16)
-    # plt.axis("equal")
-    # plt.xlabel("Longitude (x)")
-    # plt.ylabel("Latitude (y)")
-    # plt.tight_layout()
-    # plt.show()
