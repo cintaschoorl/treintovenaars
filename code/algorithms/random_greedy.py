@@ -115,7 +115,9 @@ def random_greedy_algorithm(stations_path, uid_path, connections_path, num_route
         -A csv file with the values for K for each run
     """
 
-    
+    best_score = 0
+    best_routes = None
+
     railmap = Railmap()
     railmap.load_stations(stations_path, uid_path, connections_path)
 
@@ -139,5 +141,9 @@ def random_greedy_algorithm(stations_path, uid_path, connections_path, num_route
             # writing the values into a CSV file
             writer.writerow([iteration + 1, quality_score])
 
+             # Update best score and routes if better
+            if quality_score > best_score:
+                best_score = quality_score
+                best_routes = railmap.routes.copy()
 
-    return quality_score
+    return best_score, best_routes

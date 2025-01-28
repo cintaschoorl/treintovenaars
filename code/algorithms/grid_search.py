@@ -13,7 +13,8 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
     """
     try:
         if algorithm_name == "hillclimber":
-            _, best_score, _ = hill_climber(railmap, **params)
+            best_railmap, best_score, _ = hill_climber(railmap, **params)
+            return best_score, best_railmap.routes
 
         elif algorithm_name == "random_heuristic":
             for i in range(params['num_routes']):
@@ -28,18 +29,21 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
                 route.travel_time = total_time
                 route.id = f"train_{i + 1}"
                 railmap.add_trajectory(route)
-            best_score = railmap.quality_K()
+            return railmap.quality_K(), railmap.routes
 
-        else:  # random_greedy
-            best_score = random_greedy_algorithm(
+        else:
+            temp_output = f"output/temp_random_greedy_{time.time()}.csv"
+
+            best_score, routes = random_greedy_algorithm(
                 stations_path,
                 uid_path,
                 connections_path,
                 params['num_routes'],
                 params['max_duration'],
-                params['iterations']
+                params['iterations'],
+                temp_output
             )
-        return best_score
+        return best_score, routes
 
     except Exception as e:
         print(f"Error running algorithm: {e}")
@@ -55,17 +59,17 @@ def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimbe
         "hillclimber": {
             "iterations": [1000, 10000],
             "num_routes": [3, 4, 5, 6, 7],
-
+            "max_duration": [120]
         },
         "random_heuristic": {
             "num_routes": [3, 4, 5, 6, 7],
-
-            "iterations": [1000, 10000]
+            "iterations": [1000, 10000],
+            "max_duration": [120]
         },
         "random_greedy": {
             "num_routes": [3, 4, 5, 6, 7],
-    
-            "iterations": [1000, 10000]
+            "iterations": [1000, 10000],
+            "max_duration": [120]
         }
     }
 
@@ -82,6 +86,7 @@ def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimbe
 
     best_params = None
     best_score = 0
+    best_routes = None
 
     for combo in combinations:
         params = dict(zip(param_names, combo))
@@ -90,7 +95,6 @@ def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimbe
         combo_scores = []
         n_runs = 0
 
-        # Run until time for this combination is up
         combo_start_time = time.time()
         remaining_time = total_time - (combo_start_time - start_time)
         time_per_combo = remaining_time / len(combinations)
@@ -99,7 +103,7 @@ def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimbe
             railmap = Railmap()
             railmap.load_stations(stations_path, uid_path, connections_path)
 
-            score = run_algorithm_with_timeout(
+            score, routes = run_algorithm_with_timeout(
                 algorithm,
                 railmap,
                 params,
@@ -111,30 +115,30 @@ def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimbe
             combo_scores.append(score)
             n_runs += 1
 
-            # Print progress every 5 runs
-            if n_runs % 5 == 0:
-                elapsed = time.time() - start_time
-                #print(f"Progress: {elapsed:.0f}s / {total_time}s, Runs: {n_runs}")
+            if score > best_score:
+                best_score = score
+                best_params = params
+                best_routes = routes
+                print(f"New best score: {best_score}")
 
-        # Calculate average score for this combination
         avg_score = sum(combo_scores) / len(combo_scores) if combo_scores else 0
 
-        # Save results
         with open(results_file, 'a', newline='') as f:
             writer = csv.writer(f)
             writer.writerow([*combo, avg_score, n_runs])
 
-        # Update best parameters if necessary
-        if avg_score > best_score:
-            best_score = avg_score
-            best_params = params
-            print(f"New best score: {best_score} with parameters: {best_params}")
-
-        # Check if total time is almost up
         if time.time() - start_time >= total_time:
             print(f"Time limit of {total_time} seconds reached")
             break
 
     total_runtime = time.time() - start_time
     print(f"\nTotal runtime: {total_runtime:.0f} seconds")
-    return best_params, best_score
+
+    # Print final best results
+    print(f"\nBest score: {best_score}")
+    print(f"Best parameters: {best_params}")
+    print("\nBest routes:")
+    for train_id, route in best_routes.items():
+        print(f"{train_id}: {[station.name for station in route.route]}")
+
+    return best_params, best_score, best_routes
