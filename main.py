@@ -1,16 +1,4 @@
-from code.classes.railmap import Railmap
-from code.algorithms.randomise import randomise_route
-from code.algorithms.randomise import run_randomise_route
-from code.algorithms.randomise import randomise_heuristics
-from code.algorithms.randomise import run_randomise_heuristics
-from code.algorithms.random_greedy import random_greedy_algorithm
-from code.algorithms.hillclimber import hill_climber
-from code.classes.route import Route
-from code.visualization.statistics import plot_hillclimb_sim_ann
-from code.visualization.statistics import plot_random
-from code.visualization.statistics import plot_random_greedy
 from code.algorithms.grid_search import grid_search
-import csv
 import os
 
 if __name__ == "__main__":
@@ -39,11 +27,11 @@ if __name__ == "__main__":
         print(f"Running grid search for {algorithm}")
         print(f"{'='*50}\n")
 
-        #Noord- & Zuid Holland
+        # Noord- & Zuid Holland
         best_params, best_score, best_routes = grid_search(
             *Holland_kwargs,
             algorithm=algorithm,
-            total_time=10  # 1 hour per algorithm
+            total_time=900  # now 15min > finally 1 hour per algorithm
         )
 
         # # Nederland
