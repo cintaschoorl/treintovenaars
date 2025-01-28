@@ -68,8 +68,18 @@ def load_connections(filepath):
 
 def create_plot(stations, connections, output_path):
     """
-    Create and save a plot for the given stations and connections
+    Creating and saving the plot for the given stations and connections
+
+    Input:
+        -stations: stations object
+        -connections: connections object
+        -output_path: the file in which the plot can be stored
+
+    Returns:
+        -A plot with a map with all of the stations with their railmap. The colors of the
+         connections indicate the distance of the connections
     """
+    
     stations.sort(key=lambda station: station.y)
 
     connections_data = []
@@ -88,8 +98,10 @@ def create_plot(stations, connections, output_path):
             "travel_time": connection.travel_time
         })
 
+    # using a Dataframe for the plot
     connections_df = pd.DataFrame(connections_data)
 
+    # creating the plot
     plot = (
         ggplot(connections_df) +
         geom_segment(
@@ -131,7 +143,7 @@ def create_plot(stations, connections, output_path):
 
 if __name__ == "__main__":
 
-
+    # using the right files to the right data as input for the functions
     script_dir = os.path.dirname(os.path.abspath(__file__))
     datasets = {
         "Holland": {
@@ -147,95 +159,13 @@ if __name__ == "__main__":
     }
 
     for region, paths in datasets.items():
-        # Create output directory if it doesn't exist
+
+        # creating an output path
         os.makedirs(os.path.dirname(paths["output_path"]), exist_ok=True)
 
-        # Load data
+        # loading in the data
         stations = load_stations(paths["stations_path"])
         connections = load_connections(paths["connections_path"])
 
-        # Create and save the plot
+        # creating and saving the plot
         create_plot(stations, connections, paths["output_path"])
-
-    # # in de juiste mappen de juiste data vinden als input voor de functies die deze inladen
-    # script_dir = os.path.dirname(os.path.abspath(__file__))
-    # stations_path_Holland = os.path.join(script_dir, "../../data/StationsHolland.csv")
-    # stations_path_NL = os.path.join(script_dir, "../../data/StationsNationaal.csv")
-    # connections_path_Holland = os.path.join(script_dir, "../../data/ConnectiesHolland.csv")
-    # connections_path_NL = os.path.join(script_dir, "../../data/ConnectiesNationaal.csv")
-    #
-    #
-    #
-    # # een output pad creëren
-    # output_dir = os.path.join(script_dir, "output_Holland")
-    # output_dir = os.path.join(script_dir, "output_NL")
-    #
-    # output_path = os.path.join(output_dir, "train_routes_plot_Holland.png")
-    # output_path = os.path.join(output_dir, "train_routes_plot_NL.png")
-    #
-    #
-    # os.makedirs(output_dir, exist_ok=True)
-    #
-    # def
-    #
-    #
-    # # de data inladen vanuit de voorgaande csv files
-    # stations = load_stations(stations_path)
-    # connections = load_connections(connections_path)
-    #
-    # stations.sort(key=lambda station: station.y)
-    #
-    # connections_data = []
-    # stations_dict = {station.name: station for station in stations}
-    #
-    # for connection in connections:
-    #     station1 = stations_dict[connection.station1]
-    #     station2 = stations_dict[connection.station2]
-    #     connections_data.append({
-    #         "from_station": station1.name,
-    #         "to_station": station2.name,
-    #         "from_x": station1.x,
-    #         "from_y": station1.y,
-    #         "to_x": station2.x,
-    #         "to_y": station2.y,
-    #         "travel_time": connection.travel_time
-    #     })
-    #
-    # connections_df = pd.DataFrame(connections_data)
-    #
-    # # de plot aanmaken en opslaan
-    # plot = (
-    #     ggplot(connections_df) +
-    #     geom_segment(
-    #         aes(x='from_x', y='from_y', xend='to_x', yend='to_y', color='travel_time'),
-    #         size=1,
-    #         alpha=0.8
-    #     ) +
-    #     geom_point(
-    #         aes(x='from_x', y='from_y'),
-    #         size=4,
-    #         color='blue'
-    #     ) +
-    #     geom_text(
-    #         aes(x='from_x', y='from_y', label='from_station'),
-    #         nudge_y=0.02,
-    #         size=8,
-    #         ha="center"
-    #     ) +
-    #     labs(
-    #         title="Train Route Connections",
-    #         x="Longitude",
-    #         y="Latitude",
-    #         color="Travel Time (min)"
-    #     ) +
-    #     theme_minimal() +
-    #     theme(
-    #         axis_text_x=element_blank(),
-    #         axis_text_y=element_blank(),
-    #         axis_ticks=element_blank()
-    #     )
-    # )
-    #
-    #
-    # plot.save(output_path)
-    # print(f"Plot saved to {output_path}")
