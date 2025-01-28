@@ -61,8 +61,8 @@ if __name__ == "__main__":
 
     # initializing some values
     iterations_rg_Holland = 10000
-    num_routes_rg_Holland = 20
-    max_duration_rg_Holland = 180
+    num_routes_rg_Holland = 7
+    max_duration_rg_Holland = 120
 
     iterations_rg_NL = 10000
     num_routes_rg_NL = 20
