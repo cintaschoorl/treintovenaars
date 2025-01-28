@@ -8,6 +8,7 @@ from code.algorithms.hillclimber import hill_climber
 from code.classes.route import Route
 from code.visualization.statistics import plot_hillclimb_sim_ann
 from code.visualization.statistics import plot_random
+from code.visualization.statistics import plot_random_greedy
 from code.algorithms.grid_search import grid_search
 import csv
 import os
@@ -62,6 +63,7 @@ if __name__ == "__main__":
 
     print(f"\nRandom Greedy results have been saved to {output_random_greedy}")
 
+    plot_random_greedy(output_random_greedy)
 
 
 
