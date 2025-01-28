@@ -154,14 +154,7 @@ def random_greedy_algorithm(stations_path, uid_path, connections_path, num_route
 
     for route_id, route in best_routes.items():
         station_names = [station.name for station in route.route]
+        formatted_routes[route_id] = station_names
 
-        formatted_routes[route_id] = {
-            "stations": station_names,
-            "connections": [
-                f"{route.route[i].name} -> {route.route[i + 1].name}"
-                for i in range(len(route.route) - 1)
-            ],
-            "total_travel_time": route.travel_time,
-        }
 
-    return best_score, formatted_routes
+    return best_score, best_routes
