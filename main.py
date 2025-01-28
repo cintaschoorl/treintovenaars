@@ -5,8 +5,8 @@ from code.algorithms.randomise import randomise_heuristics
 from code.algorithms.randomise import run_randomise_heuristics
 from code.algorithms.random_greedy import random_greedy_algorithm
 from code.algorithms.hillclimber import hill_climber
-from  code.classes.route import Route
-from code.visualization.statistics import plot_hill_climber
+from code.classes.route import Route
+from code.visualization.statistics import plot_hillclimb_sim_ann
 from code.visualization.statistics import plot_random
 from code.algorithms.grid_search import grid_search
 import csv
@@ -36,8 +36,8 @@ if __name__ == "__main__":
     run_randomise_heuristics(stations_Holland_path, uid_path_Holland, connections_Holland_path, output_random_heur)
 
     # make a histogram of the K values in csv file
-    plot_random('output/random_results_Holland.csv')
-    plot_random('output/random_heur_results_Holland.csv')
+    plot_random(output_random)
+    plot_random(output_random_heur)
 
 
     ### Random Greedy ###

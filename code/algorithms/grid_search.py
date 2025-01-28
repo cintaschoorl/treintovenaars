@@ -55,16 +55,16 @@ def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimbe
         "hillclimber": {
             "iterations": [1000, 10000],
             "num_routes": [3, 4, 5, 6, 7],
-            "max_duration": [120],
+
         },
         "random_heuristic": {
             "num_routes": [3, 4, 5, 6, 7],
-            "max_duration": [120]
+
             "iterations": [1000, 10000]
         },
         "random_greedy": {
             "num_routes": [3, 4, 5, 6, 7],
-            "max_duration": [120],
+    
             "iterations": [1000, 10000]
         }
     }

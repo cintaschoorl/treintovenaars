@@ -5,6 +5,16 @@ from code.classes.railmap import Railmap
 
 
 def randomise_route(stations_list, max_duration=120):
+    """
+    Generate one random route through the railmap.
+
+    Input:
+        - stations_list (list): List of Station objects
+        - max_duration (int): maximum duration for the route in minutes
+
+    Returns:
+        - list of stations in route, total time spent
+    """
     spent_time = 0
     route = Route(stations_list, max_duration)
 
@@ -32,16 +42,21 @@ def randomise_route(stations_list, max_duration=120):
 
     return route.route, spent_time
 
-def run_randomise_route(stations_path, uid_path, connections_path, output_file, iterations=10000, number_routes=7, max_duration=120):
+def run_randomise_route(stations_path, uid_path, connections_path, output_file, iterations=10000, num_routes=7, max_duration=120):
     """
-    Run the random algorithm multiple times and save results to CSV
+    Run the random algorithm multiple times and save results to CSV.
 
-    Args:
-        stations_path (str): Path to stations CSV file
-        uid_path (str): Path to UID CSV file
-        connections_path (str): Path to connections CSV file
-        output_file (str): Path to output CSV file
-        iterations (int): Number of iterations to run
+    Input:
+        - stations_path (str): Path to stations CSV file
+        - uid_path (str): Path to UID CSV file
+        - connections_path (str): Path to connections CSV file
+        - output_file (str): Path to output CSV file
+        - iterations (int): Number of iterations to run
+        - num_routes (int): Number of routes to generate
+        - max_duration (int): Maximum duration for each route in minutes
+
+    Returns:
+        - None, the results are saved to specified output file
     """
     # Create CSV header
     with open(output_file, 'w', newline='') as csvfile:
@@ -79,6 +94,17 @@ def run_randomise_route(stations_path, uid_path, connections_path, output_file, 
 global_connection_usage = {}
 
 def randomise_heuristics(stations_list, max_duration, first_route = False):
+    """
+    Generate one route through the railmap using heuristic-based randomization.
+
+    Input:
+        - stations_list (list): List of Station objects
+        - max_duration (int): Maximum duration for the route in minutes
+        - first_route (bool): Indicates if this is the first route in a new line system
+
+    Returns:
+        list of stations in route, total time spent
+    """
     if first_route:
         global_connection_usage.clear()
 
@@ -147,16 +173,21 @@ def randomise_heuristics(stations_list, max_duration, first_route = False):
     return route.route, spent_time
 
 
-def run_randomise_heuristics(stations_path, uid_path, connections_path, output_file, iterations=10000, number_routes=7, max_duration=120):
+def run_randomise_heuristics(stations_path, uid_path, connections_path, output_file, iterations=10000, num_routes=7, max_duration=120):
     """
-    Run the random algorithm with heuristics multiple times and save results to CSV
+    Run the heuristic-based random algorithm multiple times and save results to CSV.
 
-    Args:
-        stations_path (str): Path to stations CSV file
-        uid_path (str): Path to UID CSV file
-        connections_path (str): Path to connections CSV file
-        output_file (str): Path to output CSV file
-        iterations (int): Number of iterations to run
+    Input:
+        - stations_path (str): Path to stations CSV file
+        - uid_path (str): Path to UID CSV file
+        - connections_path (str): Path to connections CSV file
+        - output_file (str): Path to output CSV file
+        - iterations (int): Number of iterations to run
+        - num_routes (int): Number of routes to generate
+        - max_duration (int): Maximum duration for each route in minutes
+
+    Returns:
+        - None, the results are saved to specified output file
     """
     # Create CSV header
     with open(output_file, 'w', newline='') as csvfile:
