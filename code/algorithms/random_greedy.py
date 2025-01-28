@@ -122,7 +122,7 @@ def random_greedy_algorithm(stations_path, uid_path, connections_path, num_route
     railmap.load_stations(stations_path, uid_path, connections_path)
 
 
-    with open(output_csv, 'a', newline='') as csvfile:
+    with open(output_csv, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
 
         # writing the score for each iteration

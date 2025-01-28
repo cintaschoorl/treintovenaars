@@ -150,5 +150,5 @@ if __name__ == "__main__":
             uid_path_Holland,
             connections_Holland_path,
             algorithm=algorithm,
-            total_time=600  # 1 hour per algorithm
+            total_time=10  # 1 hour per algorithm
         )

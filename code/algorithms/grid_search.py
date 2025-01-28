@@ -16,7 +16,7 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
         if algorithm_name == "hillclimber":
             best_railmap, best_score, _ = hill_climber(railmap, **params)
             return best_score, best_railmap.routes
-        
+
         elif algorithm_name == "simulated_annealing":
             best_railmap, best_score, _, _= simulated_annealing(railmap, **params)
             return best_score, best_railmap.routes
@@ -37,7 +37,7 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
             return railmap.quality_K(), railmap.routes
 
         else:
-            temp_output = f"output/temp_random_greedy_{time.time()}.csv"
+            temp_output = f"output/temp_random_greedy.csv"
 
             best_score, routes = random_greedy_algorithm(
                 stations_path,
@@ -92,7 +92,7 @@ def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimbe
     results_file = f"output/grid_search_{algorithm}.csv"
     with open(results_file, 'w', newline='') as f:
         writer = csv.writer(f)
-        header = param_names + ['score', 'n_runs']
+        header = param_names + ['score', 'n_runs', 'best_route']
         writer.writerow(header)
 
     best_params = None
@@ -134,9 +134,17 @@ def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimbe
 
         avg_score = sum(combo_scores) / len(combo_scores) if combo_scores else 0
 
+        best_route_str = ""
+        if best_routes:
+            route_list = []
+            for train_id, route in best_routes.items():
+                station_names = [station.name for station in route.route]
+                route_list.append(f"{train_id}: {' -> '.join(station_names)}")
+            best_route_str = " | ".join(route_list)
+
         with open(results_file, 'a', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow([*combo, avg_score, n_runs])
+            writer.writerow([*combo, avg_score, n_runs, best_route_str])
 
         if time.time() - start_time >= total_time:
             print(f"Time limit of {total_time} seconds reached")
