@@ -27,12 +27,12 @@ if __name__ == "__main__":
     railmap.load_stations(stations_Holland_path, uid_path_Holland, connections_Holland_path)
 
     # parameters
-    iterations = 5000
+    iterations = 8000
     max_duration = 120
-    num_routes = 5
-    init_temp = 1000
+    num_routes = 7
+    init_temp = 3000
     cooling_type = "exponential"
-    cooling_rate = 0.8
+    cooling_rate = 0.999
    
     # run algorithm
     best_railmap, best_score, all_scores, temperatures = simulated_annealing(railmap, iterations, max_duration, num_routes, init_temp, cooling_rate, cooling_type)

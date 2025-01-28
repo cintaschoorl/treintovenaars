@@ -5,7 +5,7 @@ from copy import deepcopy
 from code.classes.route import Route
 from code.algorithms.randomise import randomise_route, randomise_heuristics
 
-def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_temp, cooling_rate=0.9, cooling_type='linear'):
+def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_temp, cooling_rate=0.999, cooling_type='linear'):
     """
     Simulated Annealing algorithm to optimize the quality score K for a rail network
 
@@ -23,7 +23,7 @@ def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_t
      # keep track of all scores and temperatures
     all_scores = []
     all_temperatures = []
-    startT = initial_temp
+    init_temp = initial_temp
     current_temp = initial_temp
 
     # generate initial solution with randomise algorithm
@@ -39,7 +39,7 @@ def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_t
     # simulated annealing loop
     for i in range(iterations):
         # Calculate temperature for iteration
-        new_temp = calculate_temp(cooling_type, startT, current_temp, cooling_rate, iterations, i)
+        new_temp = calculate_temp(cooling_type, init_temp, current_temp, cooling_rate, iterations, i)
         # prevent extremely small temperatures
         if new_temp < 1e-10:  
             new_temp = 1e-10
@@ -78,7 +78,7 @@ def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_t
     return best_railmap, best_score, all_scores, all_temperatures
 
 
-def calculate_temp(cooling_type, startT, current_temp, cooling_rate, iterations, i):
+def calculate_temp(cooling_type, init_temp, current_temp, cooling_rate, iterations, i):
     """
     Calculate the new temperature for the given cooling type
 
@@ -93,10 +93,10 @@ def calculate_temp(cooling_type, startT, current_temp, cooling_rate, iterations,
 
     """
     if cooling_type == "linear":
-        return startT - (cooling_rate * i)
+        return init_temp - (init_temp/iterations) * i
     elif cooling_type == "exponential":
-        # return startT * (cooling_rate ** i)
-        return current_temp * math.exp(-cooling_rate*i)
+        return init_temp * (cooling_rate ** i)
+        # return startT * math.exp(-cooling_rate*i)
 
 
 def generate_initial_solution(railmap, n_routes, max_duration):
@@ -165,10 +165,10 @@ def modify_solution(current_railmap):
     
     route_to_modify = random.choice(list(new_railmap.routes.values()))
 
-    if not route_to_modify:
-        print("No route found to modify.")
-        # pick random route and make random cut and regenerate???
-        return new_railmap
+    # if not route_to_modify:
+    #     print("No route found to modify.")
+    #     # pick random route and make random cut and regenerate???
+    #     return new_railmap
 
     length_route_to_modify = len(route_to_modify.route)
     random_idx = random.randint(0, length_route_to_modify-1)
@@ -180,7 +180,7 @@ def modify_solution(current_railmap):
 
     # if cut_idx != 0:
     #     cut_idx -= 1
-    print(f"Cutting route {route_to_modify} at (index {random_idx})")
+    # print(f"Cutting route {route_to_modify} at (index {random_idx})")
     new_start_station = route_to_modify.route[random_idx]
     route_to_modify.route = route_to_modify.route[:random_idx + 1]
 
@@ -207,8 +207,8 @@ def modify_solution(current_railmap):
         next_station, travel_time = random.choice(valid_next_stations)
         route_to_modify.add_station(next_station, travel_time)
         current_station = next_station
-    print("Modified railmap:")
-    for train_name, route in new_railmap.routes.items():
-        print(train_name,":",route.route,"\n")
+    # print("Modified railmap:")
+    # for train_name, route in new_railmap.routes.items():
+    #     print(train_name,":",route.route,"\n")
 
     return new_railmap
