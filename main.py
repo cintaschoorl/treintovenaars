@@ -138,7 +138,7 @@ if __name__ == "__main__":
 
 
   # Run grid search for each algorithm
-    algorithms = ["hillclimber", "random_heuristic", "random_greedy"]
+    algorithms = ["hillclimber", "simulated_annealing", "random_heuristic", "random_greedy"]
 
     for algorithm in algorithms:
         print(f"\n{'='*50}")
@@ -150,5 +150,5 @@ if __name__ == "__main__":
             uid_path_Holland,
             connections_Holland_path,
             algorithm=algorithm,
-            total_time=10  # 1 hour per algorithm
+            total_time=600  # 1 hour per algorithm
         )

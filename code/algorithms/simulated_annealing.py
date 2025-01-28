@@ -5,7 +5,7 @@ from copy import deepcopy
 from code.classes.route import Route
 from code.algorithms.randomise import randomise_route, randomise_heuristics
 
-def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_temp, cooling_rate=0.999, cooling_type='linear'):
+def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_temp=2000, cooling_rate=0.999, cooling_type='exponential'):
     """
     Simulated Annealing algorithm to optimize the quality score K for a rail network
 
@@ -34,7 +34,7 @@ def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_t
     best_railmap = deepcopy(current_railmap)
     best_score = current_score
 
-    print(f"Initial Quality Score (K): {current_score}")
+    # print(f"Initial Quality Score (K): {current_score}")
 
     # simulated annealing loop
     for i in range(iterations):
@@ -57,7 +57,7 @@ def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_t
             acceptance_prob = math.exp(-(current_score - new_score) / new_temp)            
         else:
             acceptance_prob = 1
-        print(f"Acceptance probability = {acceptance_prob}")
+        # print(f"Acceptance probability = {acceptance_prob}")
 
         # accept new solution based on probability
         if new_score > current_score or random.random() < acceptance_prob:
@@ -73,7 +73,7 @@ def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_t
         current_temp = new_temp
 
         # Debug output
-        print(f"#{i + 1}: New Score = {new_score}, Current Best Score = {best_score}, Temperature = {new_temp:.4f}")
+        # print(f"#{i + 1}: New Score = {new_score}, Current Best Score = {best_score}, Temperature = {new_temp:.4f}")
 
     return best_railmap, best_score, all_scores, all_temperatures
 

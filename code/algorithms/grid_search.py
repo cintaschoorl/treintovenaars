@@ -3,6 +3,7 @@ import csv
 from itertools import product
 from code.classes.railmap import Railmap
 from code.algorithms.hillclimber import hill_climber
+from code.algorithms.simulated_annealing import simulated_annealing
 from code.algorithms.randomise import randomise_heuristics
 from code.algorithms.random_greedy import random_greedy_algorithm
 from code.classes.route import Route
@@ -14,6 +15,10 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
     try:
         if algorithm_name == "hillclimber":
             best_railmap, best_score, _ = hill_climber(railmap, **params)
+            return best_score, best_railmap.routes
+        
+        elif algorithm_name == "simulated_annealing":
+            best_railmap, best_score, _, _= simulated_annealing(railmap, **params)
             return best_score, best_railmap.routes
 
         elif algorithm_name == "random_heuristic":
@@ -58,19 +63,25 @@ def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimbe
     param_grids = {
         "hillclimber": {
             "iterations": [1000, 10000],
-            "num_routes": [3, 4, 5, 6, 7],
+            "num_routes": [4, 5, 6, 7],
             "max_duration": [120]
         },
         "random_heuristic": {
-            "num_routes": [3, 4, 5, 6, 7],
+            "num_routes": [4, 5, 6, 7],
             "iterations": [1000, 10000],
             "max_duration": [120]
         },
         "random_greedy": {
-            "num_routes": [3, 4, 5, 6, 7],
+            "num_routes": [4, 5, 6, 7],
+            "iterations": [1000, 10000],
+            "max_duration": [120]
+        },
+        "simulated_annealing": {
+            "num_routes": [4, 5, 6, 7],
             "iterations": [1000, 10000],
             "max_duration": [120]
         }
+
     }
 
     grid = param_grids[algorithm]
