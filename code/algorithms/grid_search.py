@@ -40,7 +40,7 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
 
         else:  # random_greedy
             temp_output = f"output/temp_random_greedy.csv"
-            best_score, routes = random_greedy_algorithm(
+            best_score, routes, all_scores = random_greedy_algorithm(
                 stations_path,
                 uid_path,
                 connections_path,
@@ -50,7 +50,7 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
                 temp_output
             )
             railmap.routes = routes  # Save routes back to railmap
-            return best_score, railmap, []
+            return best_score, railmap, all_scores #[]
 
     except Exception as e:
         print(f"Error running algorithm: {e}")
