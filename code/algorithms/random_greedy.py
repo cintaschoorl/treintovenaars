@@ -125,11 +125,14 @@ def random_greedy_algorithm(stations_path, uid_path, connections_path, num_route
     with open(output_csv, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
 
-        # writing the score for each iteration
+        writer.writerow(['iteration', 'quality_score'])
+
         for iteration in range(iterations):
-            reset_connections(railmap)
+
 
             # resetting the railmap for each iteration and running the routes
+            reset_connections(railmap)
+
             for i in range(num_routes):
                 route = greedy_route(railmap, max_duration)
                 route.id = f"train_{i + 1}"
@@ -138,12 +141,27 @@ def random_greedy_algorithm(stations_path, uid_path, connections_path, num_route
             # calculating the quality score K
             quality_score = railmap.quality_K()
 
-            # writing the values into a CSV file
+            # writing the values into a CSV fil
             writer.writerow([iteration + 1, quality_score])
 
-             # Update best score and routes if better
+            # updating the best score and routes if better
             if quality_score > best_score:
                 best_score = quality_score
                 best_routes = railmap.routes.copy()
 
-    return best_score, best_routes
+    # formatting the best_routes to include stations and connections
+    formatted_routes = {}
+
+    for route_id, route in best_routes.items():
+        station_names = [station.name for station in route.route]
+
+        formatted_routes[route_id] = {
+            "stations": station_names,
+            "connections": [
+                f"{route.route[i].name} -> {route.route[i + 1].name}"
+                for i in range(len(route.route) - 1)
+            ],
+            "total_travel_time": route.travel_time,
+        }
+
+    return best_score, formatted_routes
