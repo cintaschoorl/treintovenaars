@@ -48,8 +48,11 @@ def plot_random_greedy(input_file):
     plt.text(mean * 1.05, plt.ylim()[1] * 0.9, f'Mean: {mean:.2f}\nStd: {std:.2f}', color='black')
 
     # Plotting
-    plt.savefig('output/quality_scores_histogram.png')
+    file_name = os.path.basename(input_file).replace(".csv", "")
+    plt.savefig(f'output/quality_scores_histogram_{file_name}.png')
     plt.show()
+
+
 
 
 
