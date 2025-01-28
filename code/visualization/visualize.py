@@ -65,24 +65,21 @@ def load_connections(filepath):
 
 
 
-if __name__ == "__main__":
 
-    # in de juiste mappen de juiste data vinden als input voor de functies die deze inladen
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    stations_path = os.path.join(script_dir, "../../data/StationsHolland.csv")
-    connections_path = os.path.join(script_dir, "../../data/ConnectiesHolland.csv")
+def create_plot(stations, connections, output_path):
+    """
+    Creating and saving the plot for the given stations and connections
 
-    # een output pad creëren
-    output_dir = os.path.join(script_dir, "output")
-    output_path = os.path.join(output_dir, "train_routes_plot.png")
+    Input:
+        -stations: stations object
+        -connections: connections object
+        -output_path: the file in which the plot can be stored
 
-    os.makedirs(output_dir, exist_ok=True)
-
-
-    # de data inladen vanuit de voorgaande csv files
-    stations = load_stations(stations_path)
-    connections = load_connections(connections_path)
-
+    Returns:
+        -A plot with a map with all of the stations with their railmap. The colors of the
+         connections indicate the distance of the connections
+    """
+    
     stations.sort(key=lambda station: station.y)
 
     connections_data = []
@@ -101,9 +98,10 @@ if __name__ == "__main__":
             "travel_time": connection.travel_time
         })
 
+    # using a Dataframe for the plot
     connections_df = pd.DataFrame(connections_data)
 
-    # de plot aanmaken en opslaan
+    # creating the plot
     plot = (
         ggplot(connections_df) +
         geom_segment(
@@ -136,6 +134,38 @@ if __name__ == "__main__":
         )
     )
 
-
     plot.save(output_path)
     print(f"Plot saved to {output_path}")
+
+
+
+
+
+if __name__ == "__main__":
+
+    # using the right files to the right data as input for the functions
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    datasets = {
+        "Holland": {
+            "stations_path": os.path.join(script_dir, "../../data/StationsHolland.csv"),
+            "connections_path": os.path.join(script_dir, "../../data/ConnectiesHolland.csv"),
+            "output_path": os.path.join(script_dir, "output_Holland", "train_routes_plot_Holland.png")
+        },
+        "NL": {
+            "stations_path": os.path.join(script_dir, "../../data/StationsNationaal.csv"),
+            "connections_path": os.path.join(script_dir, "../../data/ConnectiesNationaal.csv"),
+            "output_path": os.path.join(script_dir, "output_NL", "train_routes_plot_NL.png")
+        }
+    }
+
+    for region, paths in datasets.items():
+
+        # creating an output path
+        os.makedirs(os.path.dirname(paths["output_path"]), exist_ok=True)
+
+        # loading in the data
+        stations = load_stations(paths["stations_path"])
+        connections = load_connections(paths["connections_path"])
+
+        # creating and saving the plot
+        create_plot(stations, connections, paths["output_path"])

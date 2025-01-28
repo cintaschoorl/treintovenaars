@@ -60,13 +60,17 @@ if __name__ == "__main__":
     ### Random Greedy ###
 
     # initializing some values
-    iterations_rg = 10000
-    num_routes_rg = 20
-    max_duration_rg = 180
+    iterations_rg_Holland = 10000
+    num_routes_rg_Holland = 7
+    max_duration_rg_Holland = 120
+
+    iterations_rg_NL = 10000
+    num_routes_rg_NL = 20
+    max_duration_rg_NL = 180
 
 
-    output_random_greedy_Holland = "output/random_greedy_results.csv"
-    output_random_greedy_NL = "output/random_greedy_results.csv"
+    output_random_greedy_Holland = "output/random_greedy_Holland_results.csv"
+    output_random_greedy_NL = "output/random_greedy_NL_results.csv"
 
 
     with open(output_random_greedy_Holland, 'w', newline='') as csvfile:
@@ -77,9 +81,11 @@ if __name__ == "__main__":
         writer = csv.writer(csvfile)
         writer.writerow(['iteration', 'quality_score'])
 
+
+
     # running the algorithm and writing results in a csv file for each iteration
-    quality_score_Holland = random_greedy_algorithm(*Holland_kwargs, num_routes_rg, max_duration_rg, iterations_rg, output_random_greedy_Holland)
-    quality_score_NL = random_greedy_algorithm(*NL_kwargs, num_routes_rg, max_duration_rg, iterations_rg, output_random_greedy_NL)
+    quality_score_Holland = random_greedy_algorithm(*Holland_kwargs, num_routes_rg_Holland, max_duration_rg_Holland, iterations_rg_Holland, output_random_greedy_Holland)
+    quality_score_NL = random_greedy_algorithm(*NL_kwargs, num_routes_rg_NL, max_duration_rg_NL, iterations_rg_NL, output_random_greedy_NL)
 
 
     print(f"\nRandom Greedy results have been saved to {output_random_greedy_Holland}")
