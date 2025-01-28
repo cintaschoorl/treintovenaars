@@ -68,7 +68,7 @@ def run_randomise_route(stations_path, uid_path, connections_path, output_file, 
         railsystem = Railmap()
         railsystem.load_stations(stations_path, uid_path, connections_path)
 
-        number_routes = number_routes
+        number_routes = num_routes
         max_duration = max_duration
 
         for i in range(number_routes):
@@ -199,7 +199,7 @@ def run_randomise_heuristics(stations_path, uid_path, connections_path, output_f
         railsystem = Railmap()
         railsystem.load_stations(stations_path, uid_path, connections_path)
 
-        number_routes = number_routes
+        number_routes = num_routes
         max_duration = max_duration
 
         for i in range(number_routes):
