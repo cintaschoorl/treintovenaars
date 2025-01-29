@@ -8,6 +8,11 @@ import os
 class Station:
     """
     Initializing the stations with their coördinates
+
+    Input: A given name and a given x and y coördinate for each station.
+
+    Returns: Instances for each station.
+
     """
     def __init__(self, name, y, x):
         self.name = name
@@ -18,6 +23,11 @@ class Station:
 class Connection:
     """
     Initializing the connections with their stations
+
+    Input: Two stations and the given travel_time between these stations.
+
+    Returns: Instances for each connection.
+
     """
     def __init__(self, station1, station2, travel_time):
         self.station1 = station1
@@ -27,7 +37,13 @@ class Connection:
 
 def load_stations(filepath):
     """
-    Loading the stations from the StationsHolland.csv file
+    Loading the stations from the StationsHolland.csv or StationsNationaal.csv file
+
+    Input: A given filepath with the file of the stations
+    with their coördinates.
+
+    Returns: The loaded stations in a list.
+
     """
 
     stations = []
@@ -49,6 +65,11 @@ def load_stations(filepath):
 def load_connections(filepath):
     """
     Loading the connections with their stations and the travel time
+
+    Input: A given filepath with all of the connections and their travel time
+
+    Returns: A list of connections.
+
     """
     connections = []
 
@@ -79,7 +100,7 @@ def create_plot(stations, connections, output_path):
         -A plot with a map with all of the stations with their railmap. The colors of the
          connections indicate the distance of the connections
     """
-    
+
     stations.sort(key=lambda station: station.y)
 
     connections_data = []
