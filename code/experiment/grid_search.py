@@ -10,29 +10,6 @@ from code.algorithms.random_greedy import random_greedy_algorithm
 from code.classes.route import Route
 
 
-param_grids_Holland = {
-    "hillclimber": {
-        "iterations": [1000, 5000, 10000],
-        "num_routes": [4, 5, 6, 7],
-        "max_duration": [120]
-    },
-    "random_heuristic": {
-        "num_routes": [4, 5, 6, 7],
-        "iterations": [1000, 5000, 10000],
-        "max_duration": [120]
-    },
-    "random_greedy": {
-        "num_routes": [4, 5, 6, 7],
-        "iterations": [1000, 5000, 10000],
-        "max_duration": [120]
-    },
-    "simulated_annealing": {
-        "num_routes": [4, 5, 6, 7],
-        "iterations": [1000, 5000, 10000],
-        "max_duration": [120]
-    }
-}
-
 
 def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, uid_path, connections_path):
     """
@@ -81,35 +58,12 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
         return 0, None, []
 
 
-def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimber", param_grids=param_grids_Holland, total_time=3600):
+# def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimber", param_grids=param_grids_Holland, total_time=3600):
     """
     Perform grid search for parameter tuning with exact timing control.
     Save the best railmap and parameters in a CSV file.
     """
     start_time = time.time()
-
-    # param_grids = {
-    #     "hillclimber": {
-    #         "iterations": [1000, 5000, 10000],
-    #         "num_routes": [4, 5, 6, 7],
-    #         "max_duration": [120]
-    #     },
-    #     "random_heuristic": {
-    #         "num_routes": [4, 5, 6, 7],
-    #         "iterations": [1000, 5000, 10000],
-    #         "max_duration": [120]
-    #     },
-    #     "random_greedy": {
-    #         "num_routes": [4, 5, 6, 7],
-    #         "iterations": [1000, 5000, 10000],
-    #         "max_duration": [120]
-    #     },
-    #     "simulated_annealing": {
-    #         "num_routes": [4, 5, 6, 7],
-    #         "iterations": [1000, 5000, 10000],
-    #         "max_duration": [120]
-    #     }
-    # }
 
     grid = param_grids[algorithm]
     param_names = sorted(grid.keys())
@@ -206,11 +160,6 @@ def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimbe
             }, f, indent=4)
 
 
-    #  # Save the iteration-wise scores for Hill Climber and Simulated Annealing to JSON
-    # if algorithm in ["hillclimber", "simulated_annealing"] and best_all_scores:
-    #     with open(f"output/iteration_scores_{algorithm}.json", 'w') as f:
-    #         json.dump(best_all_scores, f, indent=4)
-
     # Print final best results
     print(f"\nBest score: {best_score}")
     print(f"Best parameters: {best_params}")
@@ -219,3 +168,49 @@ def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimbe
         print(f"{train_id}: {[station.name for station in route.route]}")
 
     return best_params, best_score, best_railmap
+
+
+def grid_search(stations_path, uid_path, connections_path, algorithm, param_grids, total_time=3600):
+    """
+    Perform grid search for parameter tuning with a time limit.
+    Saves only ONE JSON file per algorithm with best parameters, score, routes, and iteration scores.
+    """
+    start_time = time.time()
+    grid = param_grids[algorithm]
+    param_combinations = list(product(*[grid[key] for key in sorted(grid.keys())]))
+
+    best_params, best_score, best_railmap, best_iteration_scores = None, 0, None, []
+
+    for combo in param_combinations:
+        params = dict(zip(sorted(grid.keys()), combo))
+        print(f"Testing parameters: {params}")
+
+        railmap = Railmap()
+        railmap.load_stations(stations_path, uid_path, connections_path)
+
+        score, railmap_result, iteration_scores = run_algorithm_with_timeout(
+            algorithm, railmap, params, stations_path, uid_path, connections_path
+        )
+
+        if score > best_score:
+            best_score, best_params, best_railmap, best_iteration_scores = score, params, railmap_result, iteration_scores
+            print(f"New best score: {best_score}")
+
+        if time.time() - start_time >= total_time:
+            print(f"Time limit of {total_time} seconds reached")
+            break
+
+    # Save results in a single JSON file
+    if best_railmap:
+        output_path = f"output/best_railmap_{algorithm}.json"
+        with open(output_path, 'w') as f:
+            json.dump({
+                "parameters": best_params,
+                "score": best_score,
+                "routes": {train_id: [station.name for station in route.route] for train_id, route in best_railmap.routes.items()},
+                "iteration_scores": best_iteration_scores
+            }, f, indent=4)
+        print(f"Best results saved to {output_path}")
+
+    # return best_params, best_score, best_railmap
+
