@@ -134,13 +134,14 @@ if __name__ == "__main__":
     #     Holland: set to False to exclude this region
     #     Netherlands: set to False to exclude this region
     #     run_time: set a maximum time in seconds to let the grid search run per algorithm
-    run_grid_search(run_time=1)
+    run_grid_search(run_time=1) 
+                    # up to 3600 for an hour runtime per algorithm
 
 
     ### Plot graphs: ###
         # algorithm: choose between "random", "random_greedy", "hillclimber", "simulated_annealing"
     plot_statistics(algorithm="random_greedy")
-    
+
 
     ### Visualize map: ###
 
