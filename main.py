@@ -1,4 +1,5 @@
 from code.experiment.grid_search import grid_search
+from code.visualization.statistics import plot_quality_score_histogram, plot_iteration_scores
 import os
 
 # create output directory
@@ -70,7 +71,7 @@ def run_grid_search(Holland=True, Netherlands=True, run_time=60):
 
 
     # Run grid search for each algorithm
-    algorithms = ["random_heuristic", "hillclimber", "simulated_annealing", "random_greedy"]
+    algorithms = ["random", "random_greedy", "hillclimber", "simulated_annealing"]
 
     for algorithm in algorithms:
         print(f"\n{'='*50}")
@@ -79,24 +80,46 @@ def run_grid_search(Holland=True, Netherlands=True, run_time=60):
 
         if Holland:
             print(f"Holland:\n")
-            # Noord- & Zuid Holland
-            # best_params, best_score, best_routes = 
             grid_search(
                 *Holland_kwargs,
                 algorithm=algorithm,
                 param_grids=param_grids_Holland,
-                total_time= run_time#3600  # now 15min > finally 1 hour per algorithm
+                total_time= run_time
             )
         if Netherlands:
             print(f"Netherlands:\n")
-            # Nederland
-            # best_params, best_score, best_routes = 
             grid_search(
                 *Netherlands_kwargs,
                 algorithm=algorithm,
                 param_grids=param_grids_Netherlands,
-                total_time= run_time#60  # 1 hour per algorithm
+                total_time= run_time
             )
+
+
+def plot_statistics(algorithm="random"):
+    """
+    Give one of the algorithms to plot the quality scores K per iteration for
+    the best railmap both Holland and the Netherlands. Choose an algorithm to plot for.
+    
+    Input:
+        - algorithm (str): opt between "random", "random_greedy", "hillclimber", "simulated_annealing"
+
+    Returns:
+        - Two plots for both Holland and the Netherlands 
+    """
+    holland_dir = 'output/Holland'
+    national_dir = 'output/Netherlands'
+    file_name = f"best_railmap_{algorithm}.json"
+
+    # plot a histogram for the random and greedy algorithms
+    if algorithm in ["random", "random_greedy"]:
+        plot_quality_score_histogram(os.path.join(holland_dir, file_name))
+        plot_quality_score_histogram(os.path.join(national_dir, file_name))
+
+    # plot the course of the iterations for iterative algorithms
+    elif algorithm in ["hillclimber", "simulated_annealing"]:
+        plot_iteration_scores(os.path.join(holland_dir, file_name))
+        plot_iteration_scores(os.path.join(national_dir, file_name))
 
 
 
@@ -110,9 +133,17 @@ if __name__ == "__main__":
         # Holland: set to False to exclude this region
         # Netherlands: set to False to exclude this region
         # run_time: set a maximum time in seconds to let the grid search run per algorithm
-    run_grid_search(run_time=30)
+    run_grid_search(run_time=10)
 
     ### Visualize map: ###
+
+
+    ### Plot graphs: ###
+        # algorithm: choose between "random", "random_greedy", "hillclimber", "simulated_annealing"
+    plot_statistics(algorithm="random")
+
+
+    
 
 
 
