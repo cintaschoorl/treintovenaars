@@ -13,6 +13,52 @@ if __name__ == "__main__":
     Holland_kwargs = (stations_Holland_path, uid_path_Holland, connections_Holland_path)
     Netherlands_kwargs = (stations_NL_path, uid_path_NL, connections_NL_path)
 
+    param_grids_Holland = {
+        "hillclimber": {
+            "iterations": [1000, 5000, 10000],
+            "num_routes": [4, 5, 6, 7],
+            "max_duration": [120]
+        },
+        "random_heuristic": {
+            "num_routes": [4, 5, 6, 7],
+            "iterations": [1000, 5000, 10000],
+            "max_duration": [120]
+        },
+        "random_greedy": {
+            "num_routes": [4, 5, 6, 7],
+            "iterations": [1000, 5000, 10000],
+            "max_duration": [120]
+        },
+        "simulated_annealing": {
+            "num_routes": [4, 5, 6, 7],
+            "iterations": [1000, 5000, 10000],
+            "max_duration": [120]
+        }
+    }
+
+    param_grids_Netherlands = {
+        "hillclimber": {
+            "iterations": [1000, 5000, 10000],
+            "num_routes": [4, 5, 6, 7],
+            "max_duration": [180]
+        },
+        "random_heuristic": {
+            "num_routes": [4, 5, 6, 7],
+            "iterations": [1000, 5000, 10000],
+            "max_duration": [180]
+        },
+        "random_greedy": {
+            "num_routes": [4, 5, 6, 7],
+            "iterations": [1000, 5000, 10000],
+            "max_duration": [180]
+        },
+        "simulated_annealing": {
+            "num_routes": [4, 5, 6, 7],
+            "iterations": [1000, 5000, 10000],
+            "max_duration": [180]
+        }
+    }
+
 
     output_dir = 'output'
     if not os.path.exists(output_dir):
@@ -31,6 +77,7 @@ if __name__ == "__main__":
         best_params, best_score, best_routes = grid_search(
             *Holland_kwargs,
             algorithm=algorithm,
+            param_grids=param_grids_Holland
             total_time= 3600  # now 15min > finally 1 hour per algorithm
         )
 
@@ -38,5 +85,6 @@ if __name__ == "__main__":
         best_params, best_score, best_routes = grid_search(
             *Netherlands_kwargs,
             algorithm=algorithm,
+            param_grids=param_grids_Netherlands
             total_time=60  # 1 hour per algorithm
         )

@@ -57,35 +57,35 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
         return 0, None, []
 
 
-def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimber", total_time=3600):
+def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimber", param_grids, total_time=3600):
     """
     Perform grid search for parameter tuning with exact timing control.
     Save the best railmap and parameters in a CSV file.
     """
     start_time = time.time()
 
-    param_grids = {
-        "hillclimber": {
-            "iterations": [1000, 5000, 10000],
-            "num_routes": [4, 5, 6, 7],
-            "max_duration": [120]
-        },
-        "random_heuristic": {
-            "num_routes": [4, 5, 6, 7],
-            "iterations": [1000, 5000, 10000],
-            "max_duration": [120]
-        },
-        "random_greedy": {
-            "num_routes": [4, 5, 6, 7],
-            "iterations": [1000, 5000, 10000],
-            "max_duration": [120]
-        },
-        "simulated_annealing": {
-            "num_routes": [4, 5, 6, 7],
-            "iterations": [1000, 5000, 10000],
-            "max_duration": [120]
-        }
-    }
+    # param_grids = {
+    #     "hillclimber": {
+    #         "iterations": [1000, 5000, 10000],
+    #         "num_routes": [4, 5, 6, 7],
+    #         "max_duration": [120]
+    #     },
+    #     "random_heuristic": {
+    #         "num_routes": [4, 5, 6, 7],
+    #         "iterations": [1000, 5000, 10000],
+    #         "max_duration": [120]
+    #     },
+    #     "random_greedy": {
+    #         "num_routes": [4, 5, 6, 7],
+    #         "iterations": [1000, 5000, 10000],
+    #         "max_duration": [120]
+    #     },
+    #     "simulated_annealing": {
+    #         "num_routes": [4, 5, 6, 7],
+    #         "iterations": [1000, 5000, 10000],
+    #         "max_duration": [120]
+    #     }
+    # }
 
     grid = param_grids[algorithm]
     param_names = sorted(grid.keys())
