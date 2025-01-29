@@ -22,10 +22,7 @@ Dit algoritme genereert een random route.
 - Bouwt routes op door een willekeurige buur te kiezen
 - Stopt met toevoegen als de tijdslimiet is bereikt
 
-randomise_heuristics() is een random algoritme met de volgende heuristieken:
-1. 50% kans dat een startstation begint bij een station met één buurstation.
-2. De trein mag niet op en neer pendelen (A --> B --> A).
-3. Minimaliseren van overlap tussen verschillende routes in de lijnvoering.
+randomise_heuristics() is een random algoritme met de volgende heuristieken: 50% kans dat een startstation begint bij een station met één buurstation, de trein mag niet op en neer pendelen (A --> B --> A) en minimaliseren van overlap tussen verschillende routes in de lijnvoering.
 
 ### 2. Random Greedy algoritme
 Dit random algoritme genereert ook een random route, maar volgens het Greedy principe. Onbereden verbindingen en verbindingen met de kortste reistijd hebben hierbij prioriteit. 
