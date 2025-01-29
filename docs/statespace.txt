@@ -1,61 +1,35 @@
-Voor de versimpelde state space hebben wij als eerste gekeken naar welke
-formule we gaan gebruiken. Aangezien het in onze case zo is dat het mogelijk is
-om herhaaldelijk dezelfde keuze te maken (over iedere route zou je vaker heen kunnen rijden) en het
-in onze case de volgorde van de uitkomst belangrijk is, kwamen wij uit op de formule
-linksboven: N ^ r. De waarden die in deze formule ingevuld worden verschillen per opdracht 1
-en opdracht 2.
-
-Voor opdracht 1:
-N = 4, aangezien Amsterdam Sloterdijk, als station met het hoogst aantal omliggende stations,
-4 omliggende stations betreft. Dit aantal gaat over het maximale aantal opties die je hebt
-vanuit een bepaald station.
-r = 28, aangezien er 28 mogelijke keuzes maximaal te maken zijn, mocht je alle trajecten afgaan.
-Hiermee neem je dus nog niet de tijdsduur in acht; je zou in de praktijk namelijk niet alle stations
-af kunnen gaan binnen een beperkt aantal minuten.
-
-Wanneer je de formule met deze gegevens invult, wordt de State Space berekend als:
-4 ^ 28. Deze uitkomst vermenigvuldig je vervolgens met 7, aangezien je deze state
-space voor maximaal 7 trajecten zou kunnen benutten. De uiteindelijke State Space wordt dus:
-7 * (4 ^ 28).
-
-Voor opdracht 2:
-N = 9, aangezien Utrecht Centraal 9 omliggende stations betreft.
-r = 89, aangezien er nu sprake is van 89 trajecten tussen de stations in die je zou
-kunnen berijden, en dus keuzes die je maximaal zou kunnen maken.
-
-Wanneer je de formule met deze gegevens invult, wordt de State Space berekend als:
-9 ^ 89. Deze uitkomst vermenigvuldig je vervolgens met 20, aangezien je deze State Space
-voor maximaal 20 trajecten zou kunnen benutten. De uiteindelijke State Space voor heel Nederland
-wordt dus: 20 * (9 ^ 89).
-
-Belangrijk om te vermelden zijn hierbij de factoren die we niet in de berekening hebben meegenomen.
-In onze case is er namelijk sprake van een tijdslimiet voor ieder traject waar we overheen gaan rijden.
-Binnen dit tijdslimiet zou je niet onmogelijk vaak over alle trajecten heen kunnen rijden, aangezien dit
-niet binnen deze tijd zou kunnen en omdat je ook niet onnodig vaak over de trajecten heen hoeft te rijden.
-Dit tijdslimiet hebben wij niet in onze berekening meegenomen, omdat je voor de State Space de maximale som
-aan mogelijkheden wil berekenen, die dus de maximale grens aangeeft van de mogelijke staten die er bestaan.
-Tijd is hierin een beperkende factor die de State Space zal verkleinen. Omdat we nu ervan uit willen gaan
-dat de state space in ieder geval zo groot mogelijk is in het uiterste geval, hebben wij de factor tijd niet
-meegenomen in deze berekening.
+﻿Voor de versimpelde state space hebben wij als eerste gekeken naar welke formule we gaan gebruiken. Aangezien het in onze case zo is dat het mogelijk is om herhaaldelijk dezelfde keuze te maken (elke route is vaker te berijden) en het in onze case de volgorde van de uitkomst belangrijk is, kwamen wij uit op de formule linksboven: N ^ r. De waarden die ingevuld worden verschillen per opdracht 1 en opdracht 2, maar de betekenis van waar deze waarden voor staan zijn hetzelfde.
 
 
-Zou je deze factor nu wel meenemen in de berekening van de state space, dan zou deze een stuk verkleinen.
-Aangezien je een State Space wil berekenen voor de grootst mogelijke waarde, hoeft dit niet gedaan te worden.
-Toch hebben we, ter indicatie, gekeken naar hoeveel kleiner deze State Space dan zou worden.
+Over het algemeen houden de variabele N en r het volgende in:
+N = het aantal mogelijkheden die je hebt op het moment dat je de eerste keuze gaat maken. Dit onderdeel gaat over het aantal stations dat je gaat vermenigvuldigen met het aantal mogelijkheden (dus de omliggende te berijden connecties per station). 
+r = het aantal keer dat je een keuze gaat maken. Dit onderdeel krijgt een voor een deel een vaste waarde, en voor een deel een variabele als waarde in onze case. De waarde voor r bestaat uit verschillende onderdelen: 
+-De vaste waarde. Deze deelt het maximaal aantal minuten die een trein mag rijden door de langst durende connectie die je zou kunnen berijden. Dit is in de meest vervelende situatie, dus de minst optimale situatie.
+-De variabele waarde. Deze waarde varieert tussen het minimale en het maximale aantal routes die een lijnvoering kan berijden. Deze kan veranderen, aangezien je de ene keer de beste lijnvoering hebt met 4 routes, en een andere keer weer met 5 routes. Dit is dan ook de reden dat ieder maximaal aantal routes ook een aparte state space omvat. Er is dus een state space met deze waarde van 4, van 5, van 6 en van 7 in het geval van opdracht 1.
 
-Voor opdracht 1:
-In deze opdracht heb je een tijdslimiet van 2 uur. Hypothetisch gezien zou je binnen deze 120 minuten
-(2 * 60 minuten) maximaal  24 routes kunnen berijden, wanneer je heen en weer zou blijven rijden over
-het kortste traject; het traject tussen Rotterdam Centraal en  Schiedam Centrum. Dit is niet realistisch,
-aangezien je hiermee geen logische route rijdt maar enkel over een traject heen blijft rijden. Dit is niet nodig
-en ook niet bedoeling. Maar voor de maximale state space gaan we er voor nu vanuit dat dit wel zou kunnen.
-Dan zou de uitkomen op 24 in plaats van 28 mogelijke keuzes, wat een kleinere State Space zou betekenen.
 
-Voor opdracht 2:
-In deze opdracht heb je een tijdslimiet van 3 uur. Ook hier is het kortst durende traject het traject
-tussen Rotterdam Centraal en Schiedam Centrum, dat 5 minuten duurt. Binnen deze 180 minuten ( 3 * 60 minuten)
-zou je, weer hypothetisch gezien, 36 routes maximaal kunnen berijden. Hiervoor geldt hetzelfde; enkel over
-dit traject heen en weer rijden is geen realistische route. Echter zou dit de State Space voor opdracht
-twee wel enorm doen verkleinen, de waarde voor r in de state space zou hiermee namelijk van 89 naar 36
-mogelijke keuzes gaan. Aangezien juist de waarde van r de grootste invloed uitoefent in de grootte die
-de algehele State Space uiteindelijk omvat, is dit een enorm verschil in getalwaarde voor deze State Space.
+Opdracht 1
+N: 
+Deze krijgt de waarde 4, aangezien Amsterdam Sloterdijk, als station met het hoogst aantal omliggende stations, 4 omliggende stations betreft. Dit aantal gaat over het maximale aantal opties die je hebt vanuit een bepaald station.
+Deze waarde voor N vermenigvuldig je vervolgens met 22. Er zijn namelijk 22 stations waar je overheen kunt rijden. 22 vermenigvuldigen met 4 komt neer op het aantal opties dat je in totaal hebt (dus het aantal stations vermenigvuldigt met de mogelijkheden per station).
+r: 
+-De eerste waarde voor r is berekend door de totale tijd om over alle connecties heen te rijden te delen door de maximale tijd die je krijgt. In dit geval is dat 381 / 120, wat uitkomt op de waarde 3.18. Dit ronden we af naar boven, waardoor dit 4 wordt. 
+-De tweede waarde varieert van 4 tot 7 routes. Je kan namelijk gebruikmaken van maximaal 7 verschillende routes. Het minimale aantal routes is berekend door de hierboven gegeven berekening.
+
+
+Wanneer je de formule met deze gegevens invult, wordt de statespace berekend als:
+((22 * 4) ^ 4) ^ (aantal routes)
+Het aantal routes kan hierbij variëren van 4 t/m 7 en geeft per waarde een onderdeel weer van de totale state space.
+
+
+Opdracht 2
+N:
+ Deze krijgt de waarde 9, aangezien Utrecht Centraal, als station met het hoogst aantal omliggende stations, 9 omliggende stations betreft. Dit aantal gaat over het maximale aantal opties dat je hebt vanuit een bepaald station. Deze waarde voor N vermenigvuldig je vervolgens met 61. Er zijn namelijk 61 stations waar je overheen kunt rijden. 61 vermenigvuldigen met 9 komt neer op het aantal opties dat je in totaal hebt (dus het aantal stations vermenigvuldigt met de mogelijkheden per station).
+r:
+-De eerste waarde voor r is berekend door de totale tijd om over alle connecties heen te rijden te delen door de maximale tijd die je krijgt. In dit geval is dat 1551 / 180, wat uitkomt op de waarde 8.62. Dit ronden we af naar boven, waardoor dit 9 wordt. 
+-De tweede waarde varieert van 9 tot 20 routes. Je kan namelijk gebruikmaken van maximaal 20 verschillende routes. Het minimale aantal routes is berekend door de hierboven gegeven berekening.
+
+
+Wanneer je de formule met deze gegevens invult, wordt de state space berekend als:
+((61 * 9) ^ 9) ^ (aantal routes). 
+Het aantal routes kan hierbij variëren van 9 t/m 20 en geeft per waarde een onderdeel weer van de totale state space.
