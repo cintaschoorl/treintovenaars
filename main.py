@@ -15,46 +15,46 @@ if __name__ == "__main__":
 
     param_grids_Holland = {
         "hillclimber": {
-            "iterations": [1000, 5000, 10000],
+            "iterations": [1000, 5000],
             "num_routes": [4, 5, 6, 7],
             "max_duration": [120]
         },
         "random_heuristic": {
             "num_routes": [4, 5, 6, 7],
-            "iterations": [1000, 5000, 10000],
+            "iterations": [1000, 5000],
             "max_duration": [120]
         },
         "random_greedy": {
             "num_routes": [4, 5, 6, 7],
-            "iterations": [1000, 5000, 10000],
+            "iterations": [1000, 5000,],
             "max_duration": [120]
         },
         "simulated_annealing": {
             "num_routes": [4, 5, 6, 7],
-            "iterations": [1000, 5000, 10000],
+            "iterations": [1000, 5000],
             "max_duration": [120]
         }
     }
 
     param_grids_Netherlands = {
         "hillclimber": {
-            "iterations": [1000, 5000, 10000],
-            "num_routes": [4, 5, 6, 7],
+            "iterations": [1000, 5000],
+            "num_routes": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
             "max_duration": [180]
         },
         "random_heuristic": {
-            "num_routes": [4, 5, 6, 7],
-            "iterations": [1000, 5000, 10000],
+            "num_routes": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+            "iterations": [1000, 5000],
             "max_duration": [180]
         },
         "random_greedy": {
-            "num_routes": [4, 5, 6, 7],
-            "iterations": [1000, 5000, 10000],
+            "num_routes": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+            "iterations": [1000, 5000],
             "max_duration": [180]
         },
         "simulated_annealing": {
-            "num_routes": [4, 5, 6, 7],
-            "iterations": [1000, 5000, 10000],
+            "num_routes": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+            "iterations": [1000, 5000],
             "max_duration": [180]
         }
     }
@@ -78,7 +78,7 @@ if __name__ == "__main__":
             *Holland_kwargs,
             algorithm=algorithm,
             param_grids=param_grids_Holland,
-            total_time= 5#3600  # now 15min > finally 1 hour per algorithm
+            total_time= 60#3600  # now 15min > finally 1 hour per algorithm
         )
 
         # Nederland
@@ -86,5 +86,5 @@ if __name__ == "__main__":
             *Netherlands_kwargs,
             algorithm=algorithm,
             param_grids=param_grids_Netherlands,
-            total_time= 5#60  # 1 hour per algorithm
+            total_time= 60#60  # 1 hour per algorithm
         )
