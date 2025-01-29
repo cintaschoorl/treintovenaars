@@ -11,16 +11,6 @@ from code.algorithms.random_greedy import random_greedy_algorithm
 from code.visualization.representation import update
 from code.classes.route import Route
 
-output_dir = 'output'
-output_file = os.path.join(output_dir, "output.csv")
-
-def save_output(data, output_dir):
-    output_file = os.path.join(output_dir, "output.csv")
-    with open(output_file, mode="w", newline="") as file:
-        writer = csv.writer(file)
-        writer.writerow(["Algorithm", "Num Routes", "Iterations", "Max Duration", "Score"])
-        for row in data: 
-            writer.writerow(row)
 
 def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, uid_path, connections_path):
     """
@@ -142,7 +132,5 @@ def grid_search(stations_path, uid_path, connections_path, algorithm, param_grid
                 "routes": {train_id: [station.name for station in route.route] for train_id, route in best_railmap.routes.items()},
                 "iteration_scores": best_iteration_scores
             }, f, indent=4)
-        # save_output([[algorithm, best_params["num_routes"], best_params["iterations"], best_params["max_duration"], best_score]])
-        save_output([[algorithm, best_params["num_routes"], best_params["iterations"], best_params["max_duration"], best_score]], output_dir)
 
         print(f"Best results saved to {json_output_path}\n")
