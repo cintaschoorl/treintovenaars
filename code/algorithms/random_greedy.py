@@ -117,6 +117,7 @@ def random_greedy_algorithm(stations_path, uid_path, connections_path, num_route
 
     best_score = 0
     best_routes = None
+    all_scores = []
 
     railmap = Railmap()
     railmap.load_stations(stations_path, uid_path, connections_path)
@@ -149,6 +150,9 @@ def random_greedy_algorithm(stations_path, uid_path, connections_path, num_route
                 best_score = quality_score
                 best_routes = railmap.routes.copy()
 
+            all_scores.append(quality_score)
+
+
     # formatting the best_routes to include stations and connections
     formatted_routes = {}
 
@@ -157,4 +161,4 @@ def random_greedy_algorithm(stations_path, uid_path, connections_path, num_route
         formatted_routes[route_id] = station_names
 
 
-    return best_score, best_routes
+    return best_score, best_routes, all_scores

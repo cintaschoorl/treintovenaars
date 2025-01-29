@@ -10,6 +10,30 @@ from code.algorithms.random_greedy import random_greedy_algorithm
 from code.classes.route import Route
 
 
+param_grids_Holland = {
+    "hillclimber": {
+        "iterations": [1000, 5000, 10000],
+        "num_routes": [4, 5, 6, 7],
+        "max_duration": [120]
+    },
+    "random_heuristic": {
+        "num_routes": [4, 5, 6, 7],
+        "iterations": [1000, 5000, 10000],
+        "max_duration": [120]
+    },
+    "random_greedy": {
+        "num_routes": [4, 5, 6, 7],
+        "iterations": [1000, 5000, 10000],
+        "max_duration": [120]
+    },
+    "simulated_annealing": {
+        "num_routes": [4, 5, 6, 7],
+        "iterations": [1000, 5000, 10000],
+        "max_duration": [120]
+    }
+}
+
+
 def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, uid_path, connections_path):
     """
     Run an algorithm and return the best score and best railmap (if applicable).
@@ -40,7 +64,7 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
 
         else:  # random_greedy
             temp_output = f"output/temp_random_greedy.csv"
-            best_score, routes = random_greedy_algorithm(
+            best_score, routes, all_scores = random_greedy_algorithm(
                 stations_path,
                 uid_path,
                 connections_path,
@@ -50,42 +74,42 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
                 temp_output
             )
             railmap.routes = routes  # Save routes back to railmap
-            return best_score, railmap, []
+            return best_score, railmap, all_scores #[]
 
     except Exception as e:
         print(f"Error running algorithm: {e}")
         return 0, None, []
 
 
-def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimber", total_time=3600):
+def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimber", param_grids=param_grids_Holland, total_time=3600):
     """
     Perform grid search for parameter tuning with exact timing control.
     Save the best railmap and parameters in a CSV file.
     """
     start_time = time.time()
 
-    param_grids = {
-        "hillclimber": {
-            "iterations": [1000, 5000, 10000],
-            "num_routes": [4, 5, 6, 7],
-            "max_duration": [120]
-        },
-        "random_heuristic": {
-            "num_routes": [4, 5, 6, 7],
-            "iterations": [1000, 5000, 10000],
-            "max_duration": [120]
-        },
-        "random_greedy": {
-            "num_routes": [4, 5, 6, 7],
-            "iterations": [1000, 5000, 10000],
-            "max_duration": [120]
-        },
-        "simulated_annealing": {
-            "num_routes": [4, 5, 6, 7],
-            "iterations": [1000, 5000, 10000],
-            "max_duration": [120]
-        }
-    }
+    # param_grids = {
+    #     "hillclimber": {
+    #         "iterations": [1000, 5000, 10000],
+    #         "num_routes": [4, 5, 6, 7],
+    #         "max_duration": [120]
+    #     },
+    #     "random_heuristic": {
+    #         "num_routes": [4, 5, 6, 7],
+    #         "iterations": [1000, 5000, 10000],
+    #         "max_duration": [120]
+    #     },
+    #     "random_greedy": {
+    #         "num_routes": [4, 5, 6, 7],
+    #         "iterations": [1000, 5000, 10000],
+    #         "max_duration": [120]
+    #     },
+    #     "simulated_annealing": {
+    #         "num_routes": [4, 5, 6, 7],
+    #         "iterations": [1000, 5000, 10000],
+    #         "max_duration": [120]
+    #     }
+    # }
 
     grid = param_grids[algorithm]
     param_names = sorted(grid.keys())
