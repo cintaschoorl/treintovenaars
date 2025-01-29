@@ -1,72 +1,75 @@
 from code.experiment.grid_search import grid_search
 import os
 
+# create output directory
+output_dir = 'output'
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
 
-if __name__ == "__main__":
-    # create paths to csv data
-    stations_Holland_path = "data/StationsHolland.csv"
-    stations_NL_path = "data/StationsNationaal.csv"
-    connections_Holland_path = "data/ConnectiesHolland.csv"
-    connections_NL_path = "data/ConnectiesNationaal.csv"
-    uid_path_Holland = "data/uid_Holland.csv"
-    uid_path_NL = "data/uid_NL.csv"
+def run_grid_search(Holland=True, Netherlands=True, run_time=60):
+    """ 
+    Run the grid search experiment to find the optimal railmap and parameters.
 
-    Holland_kwargs = (stations_Holland_path, uid_path_Holland, connections_Holland_path)
-    Netherlands_kwargs = (stations_NL_path, uid_path_NL, connections_NL_path)
+    Input:
+        - Holland: Choose to run the experiment for North- and South-Holland
+        - Netherlands: Choose to run the experiment for the Netherlands
+        - run_time: Maximum time (in seconds) to run each algorithm
+
+    """
+    # create kwargs to unpack for paths to csv data
+    Holland_kwargs = ("data/StationsHolland.csv",
+                    "data/uid_Holland.csv", 
+                    "data/ConnectiesHolland.csv")
+    Netherlands_kwargs = ("data/StationsNationaal.csv", 
+                        "data/uid_NL.csv", 
+                        "data/ConnectiesNationaal.csv")
 
     param_grids_Holland = {
-        "hillclimber": {
-            "iterations": [1000, 5000],
-            "num_routes": [4, 5, 6, 7],
-            "max_duration": [120]
-        },
-        "random_heuristic": {
-            "num_routes": [4, 5, 6, 7],
-            "iterations": [1000, 5000],
-            "max_duration": [120]
-        },
-        "random_greedy": {
-            "num_routes": [4, 5, 6, 7],
-            "iterations": [1000, 5000,],
-            "max_duration": [120]
-        },
-        "simulated_annealing": {
-            "num_routes": [4, 5, 6, 7],
-            "iterations": [1000, 5000],
-            "max_duration": [120]
-        }
-    }
+    "hillclimber": {
+        "iterations": [1000, 5000],
+        "num_routes": [4, 5, 6, 7],
+        "max_duration": [120]
+    },
+    "random_heuristic": {
+        "num_routes": [4, 5, 6, 7],
+        "iterations": [1000, 5000],
+        "max_duration": [120]
+    },
+    "random_greedy": {
+        "num_routes": [4, 5, 6, 7],
+        "iterations": [1000, 5000,],
+        "max_duration": [120]
+    },
+    "simulated_annealing": {
+        "num_routes": [4, 5, 6, 7],
+        "iterations": [1000, 5000],
+        "max_duration": [120]
+    }}
 
     param_grids_Netherlands = {
-        "hillclimber": {
-            "iterations": [1000, 5000],
-            "num_routes": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-            "max_duration": [180]
-        },
-        "random_heuristic": {
-            "num_routes": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-            "iterations": [1000, 5000],
-            "max_duration": [180]
-        },
-        "random_greedy": {
-            "num_routes": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-            "iterations": [1000, 5000],
-            "max_duration": [180]
-        },
-        "simulated_annealing": {
-            "num_routes": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-            "iterations": [1000, 5000],
-            "max_duration": [180]
-        }
-    }
+    "hillclimber": {
+        "iterations": [1000, 5000],
+        "num_routes": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+        "max_duration": [180]
+    },
+    "random_heuristic": {
+        "num_routes": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+        "iterations": [1000, 5000],
+        "max_duration": [180]
+    },
+    "random_greedy": {
+        "num_routes": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+        "iterations": [1000, 5000],
+        "max_duration": [180]
+    },
+    "simulated_annealing": {
+        "num_routes": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+        "iterations": [1000, 5000],
+        "max_duration": [180]
+    }}
 
 
-    output_dir = 'output'
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
-
-  # Run grid search for each algorithm
+    # Run grid search for each algorithm
     algorithms = ["hillclimber", "simulated_annealing", "random_heuristic", "random_greedy"]
 
     for algorithm in algorithms:
@@ -74,18 +77,41 @@ if __name__ == "__main__":
         print(f"Running grid search for {algorithm}")
         print(f"{'='*50}\n")
 
-        # Noord- & Zuid Holland
-        best_params, best_score, best_routes = grid_search(
-            *Holland_kwargs,
-            algorithm=algorithm,
-            param_grids=param_grids_Holland,
-            total_time= 60#3600  # now 15min > finally 1 hour per algorithm
-        )
+        if Holland:
+            print(f"Holland:\n")
+            # Noord- & Zuid Holland
+            best_params, best_score, best_routes = grid_search(
+                *Holland_kwargs,
+                algorithm=algorithm,
+                param_grids=param_grids_Holland,
+                total_time= run_time#3600  # now 15min > finally 1 hour per algorithm
+            )
+        if Netherlands:
+            print(f"Netherlands:\n")
+            # Nederland
+            best_params, best_score, best_routes = grid_search(
+                *Netherlands_kwargs,
+                algorithm=algorithm,
+                param_grids=param_grids_Netherlands,
+                total_time= run_time#60  # 1 hour per algorithm
+            )
 
-        # Nederland
-        best_params, best_score, best_routes = grid_search(
-            *Netherlands_kwargs,
-            algorithm=algorithm,
-            param_grids=param_grids_Netherlands,
-            total_time= 60#60  # 1 hour per algorithm
-        )
+
+
+if __name__ == "__main__":
+    """
+    Comment a function out with '#' infront of the line of code
+    to ensure it does not run.
+    """
+
+    ### Run the grid search: ###
+        # Holland: set to False to exclude this region
+        # Netherlands: set to False to exclude this region
+        # run_time: set a maximum time in seconds to let the grid search run per algorithm
+    run_grid_search(run_time=30)
+
+    ### Visualize map: ###
+
+
+
+
