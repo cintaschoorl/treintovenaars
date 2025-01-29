@@ -44,7 +44,7 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
             return best_score, best_railmap, all_scores
 
         else:
-            temp_output = f"output/temp_random_greedy.csv"
+            output_file = f"output/temp_random_greedy.csv"
             best_score, routes, all_scores = random_greedy_algorithm(
                 stations_path,
                 uid_path,
