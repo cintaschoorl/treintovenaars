@@ -12,7 +12,8 @@ waarbij:
 
 ## Aan de slag
 ### Vereisten
-Deze codebase is geschreven in Python. 
+Deze codebase is geschreven in Python v3.10.8. Lees de overige vereisten in:
+    requirements.txt
 
 ### Gebruik
 Start het programma met:
@@ -23,11 +24,11 @@ Start het programma met:
 Het project is als volgt georganiseerd:
 
 - `/code`: bevat alle code van dit project
-  - `/code/algorithms`: bevat onze implementaties van:
-    - Random algoritme en heuristieken
-    - Random greedy algoritme
-    - Hill Climber algoritme
-    - Simulated Annealing
+  - `/code/algorithms`: bevat onze implementaties van de volgende algoritmes:
+    - Random
+    - Random + greedy
+    - Hill Climber
+    - Simulated
   - `/code/classes`: bevat de kernclasses:
     - Station
     - Route
