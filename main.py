@@ -149,6 +149,7 @@ def visualize_map():
     routes_path = "output/best_railmap_random_heuristic.json"
     image_path = "data/Nederland_kaart.png"
 
+
     # Load the data
     station_names = load_station_short_names(uid_path)
     stations = load_stations(stations_path)
@@ -185,10 +186,6 @@ def visualize_map():
     # Show the visualization
     plt.tight_layout()
     plt.show()
-
-
-
-
 
 
 
