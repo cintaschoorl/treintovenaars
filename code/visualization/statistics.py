@@ -2,7 +2,7 @@ import json
 import matplotlib.pyplot as plt
 import os
 
-def plot_quality_score_histogram(json_file: json, algorithm: str):
+def plot_quality_score_histogram(json_file: json, algorithm: str, region: str):
     """
     Plots a histogram of quality scores for Random and Random Greedy algorithms.
     
@@ -30,15 +30,19 @@ def plot_quality_score_histogram(json_file: json, algorithm: str):
     plt.ylabel("Frequency")
     plt.grid(True)
     
+    # save to correct output path
+    output_dir = f'output/{region}'
+    os.makedirs(output_dir, exist_ok=True)
+
     # save the plot
-    output_path = f'output/{algorithm}_quality_score_histogram.png'
+    output_path = os.path.join(output_dir, f"{algorithm}_quality_score_histogram.png")
     plt.savefig(output_path)
     print(f"Plot saved to {output_path}")
     
     # show plot
     plt.show()
 
-def plot_iteration_scores(json_file: json, algorithm: str):
+def plot_iteration_scores(json_file: json, algorithm: str, region: str):
     """
     Plots the iteration scores over iterations for Hill Climber and Simulated Annealing algorithms.
     
@@ -69,12 +73,16 @@ def plot_iteration_scores(json_file: json, algorithm: str):
     plt.ylabel("Quality Score (K)")
     plt.grid(True)
     plt.legend()
-    
+
+    # save to correct output path
+    output_dir = f'output/{region}'
+    os.makedirs(output_dir, exist_ok=True)
+
     # save the plot
-    output_path = f'output/{algorithm}_iteration_scores.png'
+    output_path = os.path.join(output_dir, f"{algorithm}_iteration_scores.png")
     plt.savefig(output_path)
     print(f"Plot saved to {output_path}")
-    
+        
     # show plot
     plt.show()
 

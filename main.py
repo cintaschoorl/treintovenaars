@@ -31,7 +31,7 @@ def run_grid_search(Holland=True, Netherlands=True, run_time=60):
         "num_routes": [4, 5, 6, 7],
         "max_duration": [120]
     },
-    "random_heuristic": {
+    "random": {
         "num_routes": [4, 5, 6, 7],
         "iterations": [1000, 5000],
         "max_duration": [120]
@@ -53,7 +53,7 @@ def run_grid_search(Holland=True, Netherlands=True, run_time=60):
         "num_routes": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
         "max_duration": [180]
     },
-    "random_heuristic": {
+    "random": {
         "num_routes": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
         "iterations": [1000, 5000],
         "max_duration": [180]
@@ -99,7 +99,8 @@ def run_grid_search(Holland=True, Netherlands=True, run_time=60):
 def plot_statistics(algorithm="random"):
     """
     Give one of the algorithms to plot the quality scores K per iteration for
-    the best railmap both Holland and the Netherlands. Choose an algorithm to plot for.
+    the best railmap both Holland and the Netherlands. Plots are saved to respective folders.
+    Choose an algorithm to plot for:
     
     Input:
         - algorithm (str): opt between "random", "random_greedy", "hillclimber", "simulated_annealing"
@@ -113,13 +114,13 @@ def plot_statistics(algorithm="random"):
 
     # plot a histogram for the random and greedy algorithms
     if algorithm in ["random", "random_greedy"]:
-        plot_quality_score_histogram(os.path.join(holland_dir, file_name))
-        plot_quality_score_histogram(os.path.join(national_dir, file_name))
+        plot_quality_score_histogram(os.path.join(holland_dir, file_name), algorithm, 'Holland')
+        plot_quality_score_histogram(os.path.join(national_dir, file_name), algorithm, 'Netherlands')
 
     # plot the course of the iterations for iterative algorithms
     elif algorithm in ["hillclimber", "simulated_annealing"]:
-        plot_iteration_scores(os.path.join(holland_dir, file_name))
-        plot_iteration_scores(os.path.join(national_dir, file_name))
+        plot_iteration_scores(os.path.join(holland_dir, file_name), algorithm, 'Holland')
+        plot_iteration_scores(os.path.join(national_dir, file_name), algorithm, 'Netherlands')
 
 
 
@@ -130,17 +131,18 @@ if __name__ == "__main__":
     """
 
     ### Run the grid search: ###
-        # Holland: set to False to exclude this region
-        # Netherlands: set to False to exclude this region
-        # run_time: set a maximum time in seconds to let the grid search run per algorithm
-    run_grid_search(run_time=10)
-
-    ### Visualize map: ###
+    #     Holland: set to False to exclude this region
+    #     Netherlands: set to False to exclude this region
+    #     run_time: set a maximum time in seconds to let the grid search run per algorithm
+    run_grid_search(run_time=1)
 
 
     ### Plot graphs: ###
         # algorithm: choose between "random", "random_greedy", "hillclimber", "simulated_annealing"
-    plot_statistics(algorithm="random")
+    plot_statistics(algorithm="random_greedy")
+    
+
+    ### Visualize map: ###
 
 
     
