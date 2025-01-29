@@ -141,7 +141,7 @@ def visualize_map():
     """
     This function initializes the visualization of the railmap with animation.
     """
-    # File paths for the data
+    # Getting the right csv files
     script_dir = os.path.dirname(os.path.abspath(__file__))
     stations_path = "data/StationsNationaal.csv"
     connections_path = "data/ConnectiesNationaal.csv"
@@ -150,13 +150,13 @@ def visualize_map():
     image_path = "data/Nederland_kaart.png"
 
 
-    # Load the data
+    # Loading the data
     station_names = load_station_short_names(uid_path)
     stations = load_stations(stations_path)
     connections = load_connections(connections_path)
     routes = load_routes(routes_path)
 
-    # Create the graph and positions
+    # Creating the graph and positions
     G = nx.DiGraph()
     pos = {}
     for station in stations:
@@ -164,7 +164,7 @@ def visualize_map():
         G.add_node(short_name)
         pos[short_name] = (station.x, station.y)
 
-    # Add the connections
+    # Adding the connections
     for connection in connections:
         station1_short = station_names.get(connection.station1, connection.station1)
         station2_short = station_names.get(connection.station2, connection.station2)
@@ -174,16 +174,16 @@ def visualize_map():
     colors = itertools.cycle(["red", "blue", "green", "purple", "orange", "brown", "pink", "cyan"])
     train_colors = {train: next(colors) for train in routes}
 
-    # Set up the figure for visualization
-    fig, ax = plt.subplots()  # Adjust size as needed
+    
+    fig, ax = plt.subplots()
     country_map = plt.imread(image_path)
 
-    # Create the animation
+    # Creating the animation
     max_frames = max(len(r) for r in routes.values())
     ani = FuncAnimation(fig, update, fargs=(ax, G, pos, country_map, routes, station_names, train_colors),
                         frames=max_frames, interval=500, repeat=False)
 
-    # Show the visualization
+    # Showing the visualization
     plt.tight_layout()
     plt.show()
 
