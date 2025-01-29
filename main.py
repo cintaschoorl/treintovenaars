@@ -31,12 +31,12 @@ if __name__ == "__main__":
         best_params, best_score, best_routes = grid_search(
             *Holland_kwargs,
             algorithm=algorithm,
-            total_time= 900  # now 15min > finally 1 hour per algorithm
+            total_time= 3600  # now 15min > finally 1 hour per algorithm
         )
 
-        # # Nederland
-        # best_params, best_score, best_routes = grid_search(
-        #     *Netherlands_kwargs,
-        #     algorithm=algorithm,
-        #     total_time=60  # 1 hour per algorithm
-        # )
+        # Nederland
+        best_params, best_score, best_routes = grid_search(
+            *Netherlands_kwargs,
+            algorithm=algorithm,
+            total_time=60  # 1 hour per algorithm
+        )
