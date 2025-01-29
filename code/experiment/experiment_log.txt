@@ -1,3 +1,10 @@
+
 Start iterations: 1000, 5000, 10.0000
 -> geen significante verschillen naar betere scores bij 10.000 iteraties voor enig algoritme:
   keuze gemaakt te verwijderen
+
+
+### CONCLUSIE HC vs Sim Ann: (holland) ###
+# Simulated annealing scored hoger bij meer iteraties (1000 vs 5000) om goed de mogelijkheden te exploreren,
+# HC convergeerd al sneller en kan hoger scoren bij bv maar 1000i . Voor HC dus niet veel iteraties nodig,
+# Sim Ann wel meer voor een zo goed mogelijk resultaat
