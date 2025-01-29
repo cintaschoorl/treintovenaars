@@ -1,6 +1,7 @@
 from code.algorithms.grid_search import grid_search
 import os
 
+
 if __name__ == "__main__":
     # create paths to csv data
     stations_Holland_path = "data/StationsHolland.csv"

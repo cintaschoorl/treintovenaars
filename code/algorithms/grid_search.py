@@ -60,7 +60,7 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
                 route.travel_time = total_time
                 route.id = f"train_{i + 1}"
                 railmap.add_trajectory(route)
-            return railmap.quality_K(), railmap, []
+            return railmap.quality_K(), railmap, all_scores
 
         else:  # random_greedy
             temp_output = f"output/temp_random_greedy.csv"
@@ -74,7 +74,7 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
                 temp_output
             )
             railmap.routes = routes  # Save routes back to railmap
-            return best_score, railmap, all_scores #[]
+            return best_score, railmap, all_scores
 
     except Exception as e:
         print(f"Error running algorithm: {e}")
@@ -166,7 +166,9 @@ def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimbe
                 best_score = score
                 best_params = params
                 best_railmap = railmap_result
+                best_all_scores = all_scores  # Store all scores related to this best railmap
                 print(f"New best score: {best_score}")
+
 
         avg_score = sum(combo_scores) / len(combo_scores) if combo_scores else 0
 
@@ -199,13 +201,15 @@ def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimbe
                 "routes": {
                     train_id: [station.name for station in route.route]
                     for train_id, route in best_railmap.routes.items()
-                }
+                },
+                "iteration_scores": best_all_scores  # Save all scores for this best railmap
             }, f, indent=4)
 
-     # Save the iteration-wise scores for Hill Climber and Simulated Annealing to JSON
-    if algorithm in ["hillclimber", "simulated_annealing"] and best_all_scores:
-        with open(f"output/iteration_scores_{algorithm}.json", 'w') as f:
-            json.dump(best_all_scores, f, indent=4)
+
+    #  # Save the iteration-wise scores for Hill Climber and Simulated Annealing to JSON
+    # if algorithm in ["hillclimber", "simulated_annealing"] and best_all_scores:
+    #     with open(f"output/iteration_scores_{algorithm}.json", 'w') as f:
+    #         json.dump(best_all_scores, f, indent=4)
 
     # Print final best results
     print(f"\nBest score: {best_score}")
