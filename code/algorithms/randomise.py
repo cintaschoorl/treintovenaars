@@ -32,10 +32,9 @@ def randomise_route(stations_list, max_duration=120):
         if route.is_valid((spent_time + next_time)):
             # update route and time with the new connection
             route.add_station(next_station, next_time)
-            #previous_stations.add(next_station)
             current_station = next_station
             spent_time += next_time
-            #print(f"{next_station} added to route, travel time: {next_time}.\nTotal route duration: {spent_time}.")
+
         else:
             break
 
@@ -70,6 +69,7 @@ def run_randomise_route(stations_path, uid_path, connections_path, output_file, 
         number_routes = num_routes
         max_duration = max_duration
 
+        # Make a railmap with the given number of routes
         for i in range(number_routes):
             route_stations, total_time = randomise_route(railsystem.stations, max_duration)
 
@@ -89,7 +89,7 @@ def run_randomise_route(stations_path, uid_path, connections_path, output_file, 
 
     print(f"\nRandom results have been saved to {output_file}")
 
-# dict om de gebruiks frequentie bij te houden in de lijnvoering (dus van meerdere routes)
+# dict to keep track of the connection ussage in one railmap (so more routes)
 global_connection_usage = {}
 
 def randomise_heuristics(stations_list, max_duration, first_route = False):
@@ -104,21 +104,19 @@ def randomise_heuristics(stations_list, max_duration, first_route = False):
     Returns:
         list of stations in route, total time spent
     """
+    # if it starts with a new railmap clear the global_connection_usage
     if first_route:
         global_connection_usage.clear()
 
     spent_time = 0
     route = Route(stations_list, max_duration)
 
-    # track used connections as a tuple (station1, station2)
-    used_connections = set()
-
     # get a list with possible start stations (1 neighbour)
     route.get_possible_start()
     current_station = route.pick_start()
     route.add_station(current_station)
 
-    # keep track of the previous station to not 'pendelen'
+    # keep track of the previous station to not go back and forth between stations
     previous_station = current_station
 
     while spent_time <= max_duration:
@@ -142,30 +140,29 @@ def randomise_heuristics(stations_list, max_duration, first_route = False):
             # Lagere score = betere keuze
             neighbour_scores[station] = usage_count
 
-        # Sorteer buren op basis van globale gebruiksfrequentie (minst gebruikt eerst)
+        # sort neighbours based on global connections usage (less frequent first)
         sorted_neighbours = sorted(
             valid_neighbours.items(),
             key=lambda x: neighbour_scores[x[0]]
         )
 
-        # 85% kans om de minst gebruikte verbinding te kiezen
+        # 85% chgange to chose the less used connection
         if sorted_neighbours and random.random() < 0.85:
             next_station, next_time = sorted_neighbours[0]
         else:
             next_station, next_time = random.choice(sorted_neighbours)
 
-            # validate if it will be longer than max duration
+        # validate that it will not be longer than max duration
         if route.is_valid((spent_time + next_time)):
             route.add_station(next_station, next_time)
 
-            # update used_connections
+            # update global_connection_usage
             connection = tuple(sorted([current_station.name, next_station.name]))
             global_connection_usage[connection] = global_connection_usage.get(connection, 0) + 1
 
             previous_station = current_station
             current_station = next_station
             spent_time += next_time
-            #print(f"{next_station} added to route, travel time: {next_time}.\nTotal route duration: {spent_time}.")
         else:
             break
 
@@ -200,6 +197,7 @@ def run_randomise_heuristics(stations_path, uid_path, connections_path, iteratio
         number_routes = num_routes
         max_duration = max_duration
 
+        # make a railsystem with the given number of routes
         for i in range(number_routes):
             # Indicate if this is the first route of a new line system
             first_route = (i == 0)
@@ -217,9 +215,11 @@ def run_randomise_heuristics(stations_path, uid_path, connections_path, iteratio
 
             railsystem.add_trajectory(route)
 
+        # calculate the quality K of the railsystem and append it to all_scores
         K = railsystem.quality_K()
         all_scores.append(K)
 
+        # get the best K score and the corresponding railmap
         if K > best_score:
             best_score = K
             best_railmap = railsystem
