@@ -38,13 +38,17 @@ Dit is een optimalisatie die voortbouwt op de Hill Climber aanpak. In het begin 
   
 ## Aan de slag
 ### Vereisten
-Deze codebase is geschreven in Python v3.10.8. In requirements.txt staan alle benodigde packages om de code succesvol te draaien. Deze zijn gemakkelijk te installeren via pip dmv. de volgende instructie:
+Deze codebase is geschreven in Python v3.10.8. In requirements.txt staan alle benodigde packages om de code succesvol te draaien. Deze zijn gemakkelijk te installeren via conda dmv. de volgende instructie:
 
-    pip install -r requirements.txt
-
-Of via conda:
+Voor in een bestaande conda omgeving:
 
     conda install --file requirements.txt
+
+Maak een nieuwe omgeving:
+    
+    conda create --name mijn_env --file requirements.txt
+
+*Vervang mijn_env door de gewenste naam van je omgeving.*
 
 ### Gebruik
 Start het programma met:
