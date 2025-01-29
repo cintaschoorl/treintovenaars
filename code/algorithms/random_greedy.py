@@ -7,11 +7,8 @@ import os
 import csv
 
 
-
-
 # using this global set
 used_connections = set()
-
 
 
 def reset_connections(railmap):
