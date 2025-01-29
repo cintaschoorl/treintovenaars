@@ -189,7 +189,7 @@ def visualize_map():
     colors = itertools.cycle(["red", "blue", "green", "purple", "orange", "brown", "pink", "cyan"])
     train_colors = {train: next(colors) for train in routes}
 
-    fig, ax = plt.subplots(figsize=(width / 100, height / 100))
+    fig, ax = plt.subplots()
     country_map = plt.imread(image_path)
     height, width, _ = country_map.shape
 
