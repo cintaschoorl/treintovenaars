@@ -7,6 +7,7 @@ from code.algorithms.hillclimber import hill_climber
 from code.algorithms.simulated_annealing import simulated_annealing
 from code.algorithms.randomise import run_randomise_heuristics
 from code.algorithms.random_greedy import random_greedy_algorithm
+from code.visualization.representation import update
 from code.classes.route import Route
 
 
@@ -132,3 +133,4 @@ def grid_search(stations_path, uid_path, connections_path, algorithm, param_grid
             }, f, indent=4)
 
         print(f"Best results saved to {json_output_path}\n")
+    
