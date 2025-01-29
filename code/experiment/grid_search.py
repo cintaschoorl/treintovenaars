@@ -12,9 +12,23 @@ from code.classes.route import Route
 
 def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, uid_path, connections_path):
     """
-    Run an algorithm and return the best score and best railmap (if applicable).
+    Run an algorithm and return the best score and best railmap.
+
+    Input:
+        - algorithm_name (str): Name of the algorithm to run
+        - railmap (Railmap): The initial railmap object to be modified by the algorithm
+        - params (dict): Parameters to be passed to the algorithm
+        - stations_path (str): Path to the stations CSV file
+        - uid_path (str): Path to the UID CSV file
+        - connections_path (str): Path to the connections CSV file
+
+    Returns:
+        - best_score (float): The best score achieved by the algorithm
+        - best_railmap (Railmap): The railmap with the best routes found
+        - all_scores (list): List of all scores during the algorithm's execution
     """
     try:
+        # run the algorithm based on the algorithm_name
         if algorithm_name == "hillclimber":
             best_railmap, best_score, all_scores = hill_climber(railmap, **params)
             return best_score, best_railmap, all_scores
@@ -23,26 +37,11 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
             best_railmap, best_score, all_scores, _ = simulated_annealing(railmap, **params)
             return best_score, best_railmap, all_scores
 
-        # elif algorithm_name == "random_heuristic":
-        #     for i in range(params['num_routes']):
-        #         first_route = (i == 0)
-        #         route_stations, total_time = randomise_heuristics(
-        #             railmap.stations,
-        #             params['max_duration'],
-        #             first_route
-        #         )
-        #         route = Route(railmap.stations, params['max_duration'])
-        #         route.route = route_stations
-        #         route.travel_time = total_time
-        #         route.id = f"train_{i + 1}"
-        #         railmap.add_trajectory(route)
-        #     return railmap.quality_K(), railmap, all_scores
-        
         elif algorithm_name == "random_heuristic":
             best_score, best_railmap, all_scores = run_randomise_heuristics(stations_path, uid_path, connections_path, **params)
             return best_score, best_railmap, all_scores
 
-        else:  # random_greedy
+        else: =
             temp_output = f"output/temp_random_greedy.csv"
             best_score, routes, all_scores = random_greedy_algorithm(
                 stations_path,
@@ -53,7 +52,7 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
                 params['iterations'],
                 temp_output
             )
-            railmap.routes = routes  # Save routes back to railmap
+            railmap.routes = routes
             return best_score, railmap, all_scores
 
     except Exception as e:
@@ -65,6 +64,18 @@ def grid_search(stations_path, uid_path, connections_path, algorithm, param_grid
     """
     Perform grid search for parameter tuning with a time limit.
     Saves one JSON file per region and algorithm combination.
+
+    Input:
+        - stations_path (str): Path to the stations CSV file
+        - uid_path (str): Path to the UID CSV file
+        - connections_path (str): Path to the connections CSV file
+        - algorithm (str): The algorithm name to use
+        - param_grids (dict): A dictionary containing possible parameter values for the grid search
+        - total_time (int): The time limit for the grid search in seconds (default is 3600 seconds)
+        - output_dir (str): The directory where the output JSON files will be saved (default is 'output')
+
+    Returns:
+        - None, the best results are saved in the output directory
     """
     start_time = time.time()
 
@@ -85,7 +96,7 @@ def grid_search(stations_path, uid_path, connections_path, algorithm, param_grid
     if not os.path.exists(region_output_dir):
         os.makedirs(region_output_dir)
 
-    # Start testing parameter combinations
+    # Start testing different parameter combinations
     for combo in param_combinations:
         params = dict(zip(sorted(grid.keys()), combo))
         print(f"Testing parameters: {params}")
