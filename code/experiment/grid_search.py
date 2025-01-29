@@ -5,7 +5,7 @@ from itertools import product
 from code.classes.railmap import Railmap
 from code.algorithms.hillclimber import hill_climber
 from code.algorithms.simulated_annealing import simulated_annealing
-from code.algorithms.randomise import randomise_heuristics
+from code.algorithms.randomise import run_randomise_heuristics
 from code.algorithms.random_greedy import random_greedy_algorithm
 from code.classes.route import Route
 
@@ -23,20 +23,24 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
             best_railmap, best_score, all_scores, _ = simulated_annealing(railmap, **params)
             return best_score, best_railmap, all_scores
 
+        # elif algorithm_name == "random_heuristic":
+        #     for i in range(params['num_routes']):
+        #         first_route = (i == 0)
+        #         route_stations, total_time = randomise_heuristics(
+        #             railmap.stations,
+        #             params['max_duration'],
+        #             first_route
+        #         )
+        #         route = Route(railmap.stations, params['max_duration'])
+        #         route.route = route_stations
+        #         route.travel_time = total_time
+        #         route.id = f"train_{i + 1}"
+        #         railmap.add_trajectory(route)
+        #     return railmap.quality_K(), railmap, all_scores
+        
         elif algorithm_name == "random_heuristic":
-            for i in range(params['num_routes']):
-                first_route = (i == 0)
-                route_stations, total_time = randomise_heuristics(
-                    railmap.stations,
-                    params['max_duration'],
-                    first_route
-                )
-                route = Route(railmap.stations, params['max_duration'])
-                route.route = route_stations
-                route.travel_time = total_time
-                route.id = f"train_{i + 1}"
-                railmap.add_trajectory(route)
-            return railmap.quality_K(), railmap, all_scores
+            best_score, best_railmap, all_scores = run_randomise_heuristics(stations_path, uid_path, connections_path, **params)
+            return best_score, best_railmap, all_scores
 
         else:  # random_greedy
             temp_output = f"output/temp_random_greedy.csv"

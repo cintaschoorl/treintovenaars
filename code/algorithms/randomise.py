@@ -172,7 +172,7 @@ def randomise_heuristics(stations_list, max_duration, first_route = False):
     return route.route, spent_time
 
 
-def run_randomise_heuristics(stations_path, uid_path, connections_path, output_file, iterations=10000, num_routes=7, max_duration=120):
+def run_randomise_heuristics(stations_path, uid_path, connections_path, iterations=10000, num_routes=7, max_duration=120):
     """
     Run the heuristic-based random algorithm multiple times and save results to CSV.
 
@@ -188,10 +188,9 @@ def run_randomise_heuristics(stations_path, uid_path, connections_path, output_f
     Returns:
         - None, the results are saved to specified output file
     """
-    # Create CSV header
-    with open(output_file, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(['quality_score'])
+    best_score = 0
+    best_railmap = None
+    all_scores = []
 
     # Run random algorithm with heuristics multiple times
     for iteration in range(iterations):
@@ -219,10 +218,10 @@ def run_randomise_heuristics(stations_path, uid_path, connections_path, output_f
             railsystem.add_trajectory(route)
 
         K = railsystem.quality_K()
+        all_scores.append(K)
 
-        # Write result to CSV
-        with open(output_file, 'a', newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow([K])
+        if K > best_score:
+            best_score = K
+            best_railmap = railsystem
 
-    print(f"\nRandom with heuristics results have been saved to {output_file}")
+    return best_score, best_railmap, all_scores

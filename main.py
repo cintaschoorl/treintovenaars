@@ -18,7 +18,7 @@ def run_grid_search(Holland=True, Netherlands=True, run_time=60):
     """
     # create kwargs to unpack for paths to csv data
     Holland_kwargs = ("data/StationsHolland.csv",
-                    "data/uid_Holland.csv", 
+                    "data/uid_Holland.csv",
                     "data/ConnectiesHolland.csv")
     Netherlands_kwargs = ("data/StationsNationaal.csv", 
                         "data/uid_NL.csv", 
@@ -70,7 +70,7 @@ def run_grid_search(Holland=True, Netherlands=True, run_time=60):
 
 
     # Run grid search for each algorithm
-    algorithms = ["hillclimber", "simulated_annealing", "random_heuristic", "random_greedy"]
+    algorithms = ["random_heuristic", "hillclimber", "simulated_annealing", "random_greedy"]
 
     for algorithm in algorithms:
         print(f"\n{'='*50}")
