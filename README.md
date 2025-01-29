@@ -16,7 +16,8 @@ Deze codebase is geschreven in Python.
 
 ### Gebruik
 Start het programma met:
-python main.py
+
+    python main.py
 
 ### Structuur
 Het project is als volgt georganiseerd:
