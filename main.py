@@ -80,7 +80,8 @@ def run_grid_search(Holland=True, Netherlands=True, run_time=60):
         if Holland:
             print(f"Holland:\n")
             # Noord- & Zuid Holland
-            best_params, best_score, best_routes = grid_search(
+            # best_params, best_score, best_routes = 
+            grid_search(
                 *Holland_kwargs,
                 algorithm=algorithm,
                 param_grids=param_grids_Holland,
@@ -89,7 +90,8 @@ def run_grid_search(Holland=True, Netherlands=True, run_time=60):
         if Netherlands:
             print(f"Netherlands:\n")
             # Nederland
-            best_params, best_score, best_routes = grid_search(
+            # best_params, best_score, best_routes = 
+            grid_search(
                 *Netherlands_kwargs,
                 algorithm=algorithm,
                 param_grids=param_grids_Netherlands,

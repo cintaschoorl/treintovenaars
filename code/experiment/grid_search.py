@@ -1,6 +1,6 @@
 import time
-import csv
 import json
+import os
 from itertools import product
 from code.classes.railmap import Railmap
 from code.algorithms.hillclimber import hill_climber
@@ -8,7 +8,6 @@ from code.algorithms.simulated_annealing import simulated_annealing
 from code.algorithms.randomise import randomise_heuristics
 from code.algorithms.random_greedy import random_greedy_algorithm
 from code.classes.route import Route
-
 
 
 def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, uid_path, connections_path):
@@ -58,159 +57,63 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
         return 0, None, []
 
 
-# def grid_search(stations_path, uid_path, connections_path, algorithm="hillclimber", param_grids=param_grids_Holland, total_time=3600):
-    """
-    Perform grid search for parameter tuning with exact timing control.
-    Save the best railmap and parameters in a CSV file.
-    """
-    start_time = time.time()
-
-    grid = param_grids[algorithm]
-    param_names = sorted(grid.keys())
-    param_values = [grid[name] for name in param_names]
-    combinations = list(product(*param_values))
-
-    results_file = f"output/grid_search_{algorithm}.csv"
-    with open(results_file, 'w', newline='') as f:
-        writer = csv.writer(f)
-        header = param_names + ['score', 'n_runs', 'best_routes']
-        writer.writerow(header)
-
-    best_params = None
-    best_score = 0
-    best_railmap = None
-    best_all_scores = []  # To store all scores for plotting the course of K
-
-
-    for combo in combinations:
-        params = dict(zip(param_names, combo))
-        print(f"\nTesting parameters: {params}")
-
-        combo_scores = []
-        n_runs = 0
-
-        combo_start_time = time.time()
-        remaining_time = total_time - (combo_start_time - start_time)
-        time_per_combo = remaining_time / len(combinations)
-
-        while time.time() - combo_start_time < time_per_combo:
-            railmap = Railmap()
-            railmap.load_stations(stations_path, uid_path, connections_path)
-
-            score, railmap_result, all_scores = run_algorithm_with_timeout(
-                algorithm,
-                railmap,
-                params,
-                stations_path,
-                uid_path,
-                connections_path
-            )
-
-            combo_scores.append(score)
-            n_runs += 1
-
-            # Track all iteration scores for plotting the course of K
-            if all_scores:
-                best_all_scores.append({
-                    'params': params,
-                    'iteration_scores': all_scores
-                })
-
-            if score > best_score:
-                best_score = score
-                best_params = params
-                best_railmap = railmap_result
-                best_all_scores = all_scores  # Store all scores related to this best railmap
-                print(f"New best score: {best_score}")
-
-
-        avg_score = sum(combo_scores) / len(combo_scores) if combo_scores else 0
-
-        # Serialize routes into a string for saving
-        best_route_str = ""
-        if best_railmap:
-            route_list = []
-            for train_id, route in best_railmap.routes.items():
-                station_names = [station.name for station in route.route]
-                route_list.append(f"{train_id}: {' -> '.join(station_names)}")
-            best_route_str = " | ".join(route_list)
-
-        with open(results_file, 'a', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow([*combo, avg_score, n_runs, best_route_str])
-
-        if time.time() - start_time >= total_time:
-            print(f"Time limit of {total_time} seconds reached")
-            break
-
-    total_runtime = time.time() - start_time
-    print(f"\nTotal runtime: {total_runtime:.0f} seconds")
-
-    # Save the best railmap to a JSON file
-    if best_railmap:
-        with open(f"output/best_railmap_{algorithm}.json", 'w') as f:
-            json.dump({
-                "parameters": best_params,
-                "score": best_score,
-                "routes": {
-                    train_id: [station.name for station in route.route]
-                    for train_id, route in best_railmap.routes.items()
-                },
-                "iteration_scores": best_all_scores  # Save all scores for this best railmap
-            }, f, indent=4)
-
-
-    # Print final best results
-    print(f"\nBest score: {best_score}")
-    print(f"Best parameters: {best_params}")
-    print("\nBest routes:")
-    for train_id, route in best_railmap.routes.items():
-        print(f"{train_id}: {[station.name for station in route.route]}")
-
-    return best_params, best_score, best_railmap
-
-
-def grid_search(stations_path, uid_path, connections_path, algorithm, param_grids, total_time=3600):
+def grid_search(stations_path, uid_path, connections_path, algorithm, param_grids, total_time=3600, output_dir='output'):
     """
     Perform grid search for parameter tuning with a time limit.
-    Saves only ONE JSON file per algorithm with best parameters, score, routes, and iteration scores.
+    Saves one JSON file per region and algorithm combination.
     """
     start_time = time.time()
+
+    # Prepare the parameter grid
     grid = param_grids[algorithm]
     param_combinations = list(product(*[grid[key] for key in sorted(grid.keys())]))
 
     best_params, best_score, best_railmap, best_iteration_scores = None, 0, None, []
 
+    # Determine the region based on the stations_path
+    if 'Holland' in stations_path:
+        region = 'Holland'
+    else:
+        region = 'Netherlands'
+
+    # Create the region folder
+    region_output_dir = os.path.join(output_dir, region)
+    if not os.path.exists(region_output_dir):
+        os.makedirs(region_output_dir)
+
+    # Start testing parameter combinations
     for combo in param_combinations:
         params = dict(zip(sorted(grid.keys()), combo))
         print(f"Testing parameters: {params}")
 
+        # Initialize railmap and load stations
         railmap = Railmap()
         railmap.load_stations(stations_path, uid_path, connections_path)
 
+        # Run the algorithm with the current parameters
         score, railmap_result, iteration_scores = run_algorithm_with_timeout(
             algorithm, railmap, params, stations_path, uid_path, connections_path
         )
 
+        # Update the best results if the current score is better
         if score > best_score:
             best_score, best_params, best_railmap, best_iteration_scores = score, params, railmap_result, iteration_scores
             print(f"New best score: {best_score}")
 
+        # Stop if the total time limit is reached
         if time.time() - start_time >= total_time:
             print(f"Time limit of {total_time} seconds reached")
             break
 
-    # Save results in a single JSON file
+    # Save the best results in a JSON file for each algorithm
     if best_railmap:
-        output_path = f"output/best_railmap_{algorithm}.json"
-        with open(output_path, 'w') as f:
+        json_output_path = os.path.join(region_output_dir, f"best_railmap_{algorithm}.json")
+        with open(json_output_path, 'w') as f:
             json.dump({
                 "parameters": best_params,
                 "score": best_score,
                 "routes": {train_id: [station.name for station in route.route] for train_id, route in best_railmap.routes.items()},
                 "iteration_scores": best_iteration_scores
             }, f, indent=4)
-        print(f"Best results saved to {output_path}")
 
-    # return best_params, best_score, best_railmap
-
+        print(f"Best results saved to {json_output_path}\n")
