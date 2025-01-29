@@ -1,4 +1,4 @@
-from code.algorithms.grid_search import grid_search
+from code.experiment.grid_search import grid_search
 import os
 
 
