@@ -34,8 +34,6 @@ def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_t
     best_railmap = deepcopy(current_railmap)
     best_score = current_score
 
-    # print(f"Initial Quality Score (K): {current_score}")
-
     # simulated annealing loop
     for i in range(iterations):
         # Calculate temperature for iteration
@@ -57,7 +55,6 @@ def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_t
             acceptance_prob = math.exp(-(current_score - new_score) / new_temp)            
         else:
             acceptance_prob = 1
-        # print(f"Acceptance probability = {acceptance_prob}")
 
         # accept new solution based on probability
         if new_score > current_score or random.random() < acceptance_prob:
@@ -71,9 +68,6 @@ def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_t
 
         all_scores.append(current_score)
         current_temp = new_temp
-
-        # Debug output
-        # print(f"#{i + 1}: New Score = {new_score}, Current Best Score = {best_score}, Temperature = {new_temp:.4f}")
 
     return best_railmap, best_score, all_scores, all_temperatures
 
@@ -96,7 +90,6 @@ def calculate_temp(cooling_type, init_temp, current_temp, cooling_rate, iteratio
         return init_temp - (init_temp/iterations) * i
     elif cooling_type == "exponential":
         return init_temp * (cooling_rate ** i)
-        # return startT * math.exp(-cooling_rate*i)
 
 
 def generate_initial_solution(railmap, n_routes, max_duration):
@@ -141,47 +134,18 @@ def modify_solution(current_railmap):
     Returns:
         - New modified Railmap solution
     """
-    # Create a copy of the current solution
+    # create a copy of the current solution
     new_railmap = deepcopy(current_railmap)
-
-    # # count station occurences across all routes
-    # station_counter = Counter()
-    # for route in new_railmap.routes.values():
-    #     for station in route.route:
-    #         station_counter[station.id] += 1
-
-    # # find most common station
-    # most_common = max(station_counter, key=station_counter.get)
-    # print(f"Most common station: {most_common} ({station_counter[most_common]} times)")
-
-    # find route where the station occurs the most
-    # route_to_modify = None
-    # max_occurrences = 0
-    # for route in new_railmap.routes.values():
-    #     occurrences = sum(1 for station in route.route if station.id == most_common)
-    #     if occurrences > max_occurrences:
-    #         route_to_modify = route
-    #         max_occurrences = occurrences
     
+    # pick a random route to modify
     route_to_modify = random.choice(list(new_railmap.routes.values()))
 
-    # if not route_to_modify:
-    #     print("No route found to modify.")
-    #     # pick random route and make random cut and regenerate???
-    #     return new_railmap
-
+    # get a random index for a station in the route
     length_route_to_modify = len(route_to_modify.route)
     random_idx = random.randint(0, length_route_to_modify-1)
-    # cut route at the first occurrence of the most common station
-    # cut_idx = next(i for i, station in enumerate(route_to_modify.route) if station.id == most_common)
-
-    # for i, station in enumerate(route_to_modify.route):
-    #     cut_idx = random.choice(range(len(route_to_modify.route)))
-
-    # if cut_idx != 0:
-    #     cut_idx -= 1
-    # print(f"Cutting route {route_to_modify} at (index {random_idx})")
     new_start_station = route_to_modify.route[random_idx]
+
+    # cut the route until this station
     route_to_modify.route = route_to_modify.route[:random_idx + 1]
 
     # calculate new travel time of cut route
@@ -207,8 +171,5 @@ def modify_solution(current_railmap):
         next_station, travel_time = random.choice(valid_next_stations)
         route_to_modify.add_station(next_station, travel_time)
         current_station = next_station
-    # print("Modified railmap:")
-    # for train_name, route in new_railmap.routes.items():
-    #     print(train_name,":",route.route,"\n")
 
     return new_railmap
