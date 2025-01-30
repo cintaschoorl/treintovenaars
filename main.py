@@ -63,23 +63,23 @@ def run_grid_search(Holland=True, Netherlands=True, run_time=60):
 
     param_grids_Netherlands = {
     "hillclimber": {
-        "iterations": [1000, 5000],
+        "iterations": [1000, 5000, 10000],
         "num_routes": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
         "max_duration": [180]
     },
     "random": {
         "num_routes": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-        "iterations": [1000, 5000],
+        "iterations": [1000, 5000, 10000],
         "max_duration": [180]
     },
     "random_greedy": {
         "num_routes": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-        "iterations": [1000, 5000],
+        "iterations": [1000, 5000, 10000],
         "max_duration": [180]
     },
     "simulated_annealing": {
         "num_routes": [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-        "iterations": [1000, 5000],
+        "iterations": [1000, 5000, 10000],
         "max_duration": [180]
     }}
 
