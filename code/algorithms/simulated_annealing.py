@@ -3,9 +3,9 @@ import math
 from collections import Counter
 from copy import deepcopy
 from code.classes.route import Route
-from code.algorithms.randomise import randomise_route, randomise_heuristics
+from code.algorithms.randomise import randomise_route
 
-def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_temp=2000, cooling_rate=0.999, cooling_type='exponential'):
+def simulated_annealing(railmap, iterations, max_duration, num_routes, initial_temp=1000, cooling_rate=0.999, cooling_type='exponential'):
     """
     Simulated Annealing algorithm to optimize the quality score K for a rail network
 

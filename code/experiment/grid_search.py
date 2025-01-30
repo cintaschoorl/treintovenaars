@@ -44,15 +44,14 @@ def run_algorithm_with_timeout(algorithm_name, railmap, params, stations_path, u
             return best_score, best_railmap, all_scores
 
         else:
-            temp_output = f"output/temp_random_greedy.csv"
+            # temp_output = f"output/temp_random_greedy.csv"
             best_score, routes, all_scores = random_greedy_algorithm(
                 stations_path,
                 uid_path,
                 connections_path,
                 params['num_routes'],
                 params['max_duration'],
-                params['iterations'],
-                output_file
+                params['iterations']
             )
             railmap.routes = routes
             return best_score, railmap, all_scores

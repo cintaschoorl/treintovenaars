@@ -94,7 +94,7 @@ def greedy_route(railmap, max_duration):
 
 
 
-def random_greedy_algorithm(stations_path, uid_path, connections_path, num_routes, max_duration, iterations, output_csv):
+def random_greedy_algorithm(stations_path, uid_path, connections_path, num_routes, max_duration, iterations):
     """
     Running the random greedy algorithm and writing the quality score at each iteration.
 
@@ -106,7 +106,6 @@ def random_greedy_algorithm(stations_path, uid_path, connections_path, num_route
         -max_duration: integer which is given in the main, that determines the
          maximum amount of minutes the trains can ride their routes
         -iterations: an integer that defines the number of times the algorithm will run
-        -output_csv: a string which will define the path towards the right output file
 
     Returns:
         -A csv file with the values for K for each run
@@ -120,34 +119,33 @@ def random_greedy_algorithm(stations_path, uid_path, connections_path, num_route
     railmap.load_stations(stations_path, uid_path, connections_path)
 
 
-    with open(output_csv, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
+    # with open(output_csv, 'w', newline='') as csvfile:
+    #     writer = csv.writer(csvfile)
 
-        writer.writerow(['iteration', 'quality_score'])
+    #     writer.writerow(['iteration', 'quality_score'])
 
-        for iteration in range(iterations):
+    for iteration in range(iterations):
 
+        # resetting the railmap for each iteration and running the routes
+        reset_connections(railmap)
 
-            # resetting the railmap for each iteration and running the routes
-            reset_connections(railmap)
+        for i in range(num_routes):
+            route = greedy_route(railmap, max_duration)
+            route.id = f"train_{i + 1}"
+            railmap.add_trajectory(route)
 
-            for i in range(num_routes):
-                route = greedy_route(railmap, max_duration)
-                route.id = f"train_{i + 1}"
-                railmap.add_trajectory(route)
+        # calculating the quality score K
+        quality_score = railmap.quality_K()
 
-            # calculating the quality score K
-            quality_score = railmap.quality_K()
+        # writing the values into a CSV fil
+        # writer.writerow([iteration + 1, quality_score])
 
-            # writing the values into a CSV fil
-            writer.writerow([iteration + 1, quality_score])
+        # updating the best score and routes if better
+        if quality_score > best_score:
+            best_score = quality_score
+            best_routes = railmap.routes.copy()
 
-            # updating the best score and routes if better
-            if quality_score > best_score:
-                best_score = quality_score
-                best_routes = railmap.routes.copy()
-
-            all_scores.append(quality_score)
+        all_scores.append(quality_score)
 
 
     # formatting the best_routes to include stations and connections

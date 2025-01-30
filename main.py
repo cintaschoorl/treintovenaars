@@ -13,6 +13,7 @@ from matplotlib.animation import FuncAnimation
 import json
 import networkx as nx
 import itertools
+import argparse
 
 
 # create output directory
@@ -40,23 +41,23 @@ def run_grid_search(Holland=True, Netherlands=True, run_time=60):
 
     param_grids_Holland = {
     "hillclimber": {
-        "iterations": [1000, 5000],
+        "iterations": [1000, 5000, 10000],
         "num_routes": [4, 5, 6, 7],
         "max_duration": [120]
     },
     "random": {
         "num_routes": [4, 5, 6, 7],
-        "iterations": [1000, 5000],
+        "iterations": [1000, 5000, 10000],
         "max_duration": [120]
     },
     "random_greedy": {
         "num_routes": [4, 5, 6, 7],
-        "iterations": [1000, 5000,],
+        "iterations": [1000, 5000, 10000],
         "max_duration": [120]
     },
     "simulated_annealing": {
         "num_routes": [4, 5, 6, 7],
-        "iterations": [1000, 5000],
+        "iterations": [1000, 5000, 10000],
         "max_duration": [120]
     }}
 
@@ -137,16 +138,20 @@ def plot_statistics(algorithm="random"):
 
 
 
-def visualize_map():
+def visualize_map(algorithm="random"):
     """
-    This function initializes the visualization of the railmap with animation.
+    This function initializes the visualization of the best railmap 
+    for a chosen algorithm with animation.
+    
+    Input:
+        - algorithm (str): opt between "random", "random_greedy", "hillclimber", "simulated_annealing"
     """
     # Getting the right csv files
     script_dir = os.path.dirname(os.path.abspath(__file__))
     stations_path = "data/StationsNationaal.csv"
     connections_path = "data/ConnectiesNationaal.csv"
     uid_path = "data/uid_NL.csv"
-    routes_path = "output/best_railmap_random_heuristic.json"
+    routes_path = f"output/Netherlands/best_railmap_{algorithm}.json"
     image_path = "data/Nederland_kaart.png"
 
 
@@ -174,7 +179,6 @@ def visualize_map():
     colors = itertools.cycle(["red", "blue", "green", "purple", "orange", "brown", "pink", "cyan"])
     train_colors = {train: next(colors) for train in routes}
 
-    
     fig, ax = plt.subplots()
     country_map = plt.imread(image_path)
 
@@ -188,25 +192,28 @@ def visualize_map():
     plt.show()
 
 
+def parse():
+        run_time = int(input("Enter the max runtime for grid search in seconds: "))
+        print(f"Running grid search with a max runtime of {run_time} seconds...")
+        run_grid_search(run_time=run_time)
+        
+        while True:
+            action = input("Do you want to (plot) statistics or (visualize) the map for the best railmaps? (or type 'exit' to quit): ").strip().lower()
+            if action == "exit":
+                break
+            elif action in ["plot", "visualize"]:
+                algorithm = input("Choose an algorithm (random, random_greedy, hillclimber, simulated_annealing): ").strip()
+                if action == "plot":
+                    print(f"Plotting statistics for {algorithm} algorithm...")
+                    plot_statistics(algorithm)
+                elif action == "visualize":
+                    print(f"Visualizing map for {algorithm} algorithm...")
+                    visualize_map(algorithm)
+            else:
+                print("Invalid choice. Please enter 'plot', 'visualize', or 'exit'.")
+
 
 if __name__ == "__main__":
-    """
-    Comment a function out with '#' infront of the line of code
-    to ensure it does not run.
-    """
+    parse()
 
-    ### Run the grid search: ###
-    #     Holland: set to False to exclude this region
-    #     Netherlands: set to False to exclude this region
-    #     run_time: set a maximum time in seconds to let the grid search run per algorithm
-    run_grid_search(run_time=600)
-                    # up to 3600 for an hour runtime per algorithm
-
-
-    ### Plot graphs: ###
-        # algorithm: choose between "random", "random_greedy", "hillclimber", "simulated_annealing"
-    plot_statistics(algorithm="random_greedy")
-
-
-    ### Visualize map: ###
-    visualize_map()
+    
